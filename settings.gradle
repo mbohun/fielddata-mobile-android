@@ -1,0 +1,7 @@
+include 'fielddata-mobile' 
+include ':library:google-play-services_lib'
+include ':library:ActionBarSherlock:actionbarsherlock'
+include ':library:ActionBarSherlock'
+include ':library:android-mapviewballoons:android-mapviewballoons'
+include ':library:Android-ViewPagerIndicator:library'
+
