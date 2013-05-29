@@ -23,4 +23,10 @@ project(':libraries:ActionBarSherlock:actionbarsherlock') {
 task wrapper(type: Wrapper) {
     gradleVersion = '1.6'
 }
+
+task setupLibraries(type:Exec) {
+    // This is platform specific... should really rewrite this script in groovy.
+    commandLine './libraries/setupLibraries.bash'
+}
+
 apply plugin: 'android-reporting'
