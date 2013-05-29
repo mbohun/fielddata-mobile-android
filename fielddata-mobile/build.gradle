@@ -10,10 +10,10 @@ buildscript {
 apply plugin: 'android'
 
 dependencies {
-    compile project(':library:ActionBarSherlock:actionbarsherlock')
-    compile project(':library:Android-ViewPagerIndicator:library')
-    compile project(':library:android-mapviewballoons:android-mapviewballoons')
-    compile project(':library:google-play-services_lib')
+    compile project(':libraries:ActionBarSherlock:actionbarsherlock')
+    compile project(':libraries:Android-ViewPagerIndicator:library')
+    compile project(':libraries:android-mapviewballoons:android-mapviewballoons')
+    compile project(':libraries:google-play-services_lib')
     compile files('libs/spring-android-core-1.0.0.RELEASE.jar')
     compile files('libs/spring-android-rest-template-1.0.0.RELEASE.jar')
     compile files('libs/gson-2.2.2.jar')
