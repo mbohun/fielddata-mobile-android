@@ -43,7 +43,6 @@
         
         <item name="android:textSize">14dp</item>
         <item name="selectedBold">true</item>
-        <item name="android:textSize">12sp</item>
         <item name="topPadding">10dp</item>
         <item name="footerPadding">10dp</item>
         
