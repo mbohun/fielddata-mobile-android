@@ -17,7 +17,7 @@ android {
 
     defaultConfig {
         minSdkVersion 7
-        targetSdkVersion 'Google Inc.:Google APIs:16'
+        targetSdkVersion 'Google Inc.:Google APIs:17'
     }
     sourceSets {
         main {
