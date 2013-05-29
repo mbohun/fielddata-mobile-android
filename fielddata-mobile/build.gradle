@@ -28,7 +28,7 @@ dependencies {
 }
 
 android {
-    compileSdkVersion 'Google Inc.:Google APIs:16'
+    compileSdkVersion 'Google Inc.:Google APIs:17'
     buildToolsVersion "17"
 
     defaultConfig {
