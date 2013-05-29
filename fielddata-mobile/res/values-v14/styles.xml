@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="DateSpinner" parent="@android:style/Widget.Holo.Light.Spinner">
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:paddingLeft">5dp</item>
+        
+    </style>
+    
+    
+     
+    <style name="FieldData.ActionButton" parent="@android:style/Widget.Holo.Light.ImageButton">
+           </style>
+           
+    <style name="FieldData.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid">
+        <item name="android:titleTextStyle">@style/FieldData.ActionBar.Title</item>     
+        <item name="titleTextStyle">@style/FieldData.ActionBar.Title</item>
+        
+        <item name="subtitleTextStyle">@style/FieldData.ActionBar.Subtitle</item>
+        <item name="android:subtitleTextStyle">@style/FieldData.ActionBar.Subtitle</item>
+        
+        <item name="background">@drawable/action_bar_background</item>
+        <item name="android:background">@drawable/action_bar_background</item>
+        
+        <item name="actionBarItemBackground">@drawable/ad_tab_unselected_holo</item>
+        <item name="backgroundStacked">@drawable/ad_tab_unselected_holo</item>
+        <item name="backgroundSplit">@drawable/ad_tab_unselected_holo</item>
+         <item name="android:backgroundStacked">@drawable/ad_tab_unselected_holo</item>
+        <item name="android:backgroundSplit">@drawable/ad_tab_unselected_holo</item>
+        <item name="homeAsUpIndicator">@drawable/abs__ic_ab_back_holo_light</item>
+        <item name="progressBarStyle">@style/Widget.Sherlock.Light.ProgressBar.Horizontal</item>
+        <item name="indeterminateProgressStyle">@style/Widget.Sherlock.Light.ProgressBar</item>
+    </style>
+    
+    
+    <style name="CustomTitlePageIndicator" >
+        <item name="android:background">#eeeeee</item>
+        <item name="footerColor">@color/headerLabelBackgroundContrast</item>
+        <item name="footerLineHeight">2dp</item>
+        <item name="footerIndicatorHeight">3dp</item>
+        <item name="footerIndicatorStyle">underline</item>
+        <item name="android:textColor">#000000</item>
+        <item name="selectedColor">#000000</item>
+        
+        <item name="android:textSize">14dp</item>
+        <item name="selectedBold">true</item>
+        <item name="android:textSize">12sp</item>
+        <item name="topPadding">10dp</item>
+        <item name="footerPadding">10dp</item>
+        
+        <item name="android:textAllCaps">true</item>
+    </style>
+    
+     <style name="AppTheme" parent="@style/Theme.Sherlock.Light">
+        <item name="vpiTitlePageIndicatorStyle">@style/CustomTitlePageIndicator</item>
+        <item name="android:actionBarStyle">@style/FieldData.ActionBar</item>
+        <item name="actionBarStyle">@style/FieldData.ActionBar</item>
+        <item name="android:windowBackground">@drawable/roundedrectangle</item>
+        <item name="android:actionBarTabStyle">@style/FieldData.ActionBarTab</item>
+        <item name="actionBarTabStyle">@style/FieldData.ActionBarTab</item> 
+    </style>
+       
+</resources>

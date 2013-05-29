@@ -1,0 +1,98 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/usernameLbl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
+        android:text="@string/user_name"
+        tools:context=".LoginActivity" />
+    
+    <EditText
+        android:id="@+id/username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/usernameLbl"
+        android:layout_marginTop="5dp"
+        android:ems="10" 
+        android:inputType="text"/>
+    
+    <TextView
+        android:id="@+id/passwordLbl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/usernameLbl"
+        android:layout_below="@id/username"
+        android:layout_marginTop="15dp"
+        android:text="@string/password" />
+    
+    <EditText
+        android:id="@+id/userPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/passwordLbl"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:ems="10"
+        android:inputType="textPassword" />
+  
+    <TextView
+        android:id="@+id/portalLbl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/userPassword"
+        android:layout_marginTop="15dp"
+        android:text="@string/portal"
+        android:visibility="gone" />
+    
+    <Spinner
+        android:id="@+id/portal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/portalLbl"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:ems="10"
+        android:visibility="gone"
+        />
+        
+
+    <Button
+        android:id="@+id/loginBtn"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/portal"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="35dp"
+        android:text="@string/login" />
+
+    
+    <TextView
+        android:id="@+id/registrationLbl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/loginBtn"
+        android:layout_marginTop="15dp"
+        android:text="@string/registrationMessage"
+        android:visibility="invisible"
+        />
+    
+    <Button
+        android:id="@+id/registerBtn"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/registrationLbl"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:text="@string/register"
+        android:visibility="invisible" />
+    
+</RelativeLayout>

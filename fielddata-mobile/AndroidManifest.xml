@@ -1,0 +1,119 @@
+<!--
+  Copyright (C) 2010 Atlas of Living Australia
+  All Rights Reserved.
+   
+  The contents of this file are subject to the Mozilla Public
+  License Version 1.1 (the "License"); you may not use this file
+  except in compliance with the License. You may obtain a copy of
+  the License at http://www.mozilla.org/MPL/
+   
+  Software distributed under the License is distributed on an "AS
+  IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+  implied. See the License for the specific language governing
+  rights and limitations under the License.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="au.org.ala.fielddata.mobile.nrmplus"
+    android:versionCode="2"
+    android:versionName="1.0.1" >
+
+    <uses-sdk
+        android:minSdkVersion="7"
+        android:targetSdkVersion="17" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="au.org.ala.ozatlas.permission.MAPS_RECEIVE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    
+    <supports-screens
+          android:largeScreens="true"
+          android:normalScreens="true"
+          android:smallScreens="true" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true"/>
+
+    <application
+        android:name="au.org.ala.fielddata.mobile.FieldDataApp"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <uses-library android:name="com.google.android.maps" />
+
+        <activity
+            android:name="au.org.ala.fielddata.mobile.MobileFieldDataDashboard"
+            android:label="@string/title_activity_mobile_data_dashboard"
+            android:uiOptions="splitActionBarWhenNarrow" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="au.org.ala.fielddata.mobile.CollectSurveyData"
+            android:label="@string/title_activity_mobile_field_data"
+            android:windowSoftInputMode="stateHidden" >
+        </activity>
+        <activity
+            android:name="au.org.ala.fielddata.mobile.SpeciesSelectionActivity"
+            android:label="@string/title_species_selection" >
+        </activity>
+        <activity
+            android:name="au.org.ala.fielddata.mobile.SpeciesListActivity"
+            android:label="@string/title_species_list" >
+        </activity>
+        <activity
+            android:name="au.org.ala.fielddata.mobile.LocationSelectionActivity"
+            android:label="@string/title_activity_location_selection" >
+        </activity>
+        <activity
+            android:name="au.org.ala.fielddata.mobile.map.WayPointActivity"
+            android:label="@string/title_activity_location_selection"
+            android:uiOptions="splitActionBarWhenNarrow" >
+        </activity>
+        <activity
+            android:name="au.org.ala.fielddata.mobile.ViewSavedRecordsActivity"
+            android:label="@string/title_activity_view_saved_records" >
+        </activity>
+        <activity
+            android:name="au.org.ala.fielddata.mobile.pref.EditPreferences"
+            android:label="@string/title_activity_edit_preferences" >
+        </activity>
+        <activity
+            android:name="au.org.ala.fielddata.mobile.LoginActivity"
+            android:label="@string/title_activity_login" >
+        </activity>
+        <activity
+            android:name="au.org.ala.fielddata.mobile.FieldGuideActivity"
+            android:label="@string/title_activity_field_guide" 
+            android:configChanges="orientation">
+        </activity>
+        
+        <service
+            android:name="au.org.ala.fielddata.mobile.service.UploadService"
+            android:label="Upload Service" >
+        </service>
+        <service
+            android:name="au.org.ala.fielddata.mobile.service.LocationServiceHelper"
+            android:label="Location Service" >
+        </service>
+        <service
+            android:name="au.org.ala.fielddata.mobile.service.SurveyDownloadService"
+            android:label="Survey Download Service" >
+        </service>
+         <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+         android:value="AIzaSyCyD75ig68FJJsU4gS7bYrhx_4_8MxvyK4" />
+           <!--  android:value="AIzaSyApH8-iLdRdomeh1bwzCicpKySpOBiZY00" /> -->
+        
+    </application>
+
+</manifest>

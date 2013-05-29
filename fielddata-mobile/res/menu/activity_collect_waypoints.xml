@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    
+	<item android:id="@+id/add_photopoint"
+        android:title="Add Waypoint"
+        android:titleCondensed="Add"
+        android:icon="@drawable/ic_action_add_photopoint"
+        android:showAsAction="always" />
+	
+	<item android:id="@+id/add_waypoint"
+	    android:title="Edit"
+	    android:icon="@drawable/ic_action_add_waypoint"
+	    android:showAsAction="always"/>
+	
+	<item android:id="@+id/close_polygon"
+	    android:title="Close polygon"
+	    android:icon="@drawable/ic_action_closed_polygon"
+	    android:showAsAction="always"/>
+	
+	<item android:id="@+id/open_polygon"
+	    android:title="Close polygon"
+	    android:icon="@drawable/ic_action_open_polygon"
+	    android:showAsAction="always"
+	    android:visible="false"/>
+	
+	<item android:id="@+id/done"
+	    android:title="Done"
+	    android:showAsAction="always"></item>
+    
+</menu>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (C) 2010 Atlas of Living Australia
+  All Rights Reserved.
+   
+  The contents of this file are subject to the Mozilla Public
+  License Version 1.1 (the "License"); you may not use this file
+  except in compliance with the License. You may obtain a copy of
+  the License at http://www.mozilla.org/MPL/
+   
+  Software distributed under the License is distributed on an "AS
+  IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+  implied. See the License for the specific language governing
+  rights and limitations under the License.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="5dp" 
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginTop="0dp"
+    android:layout_marginBottom="5dp"
+    android:background="#EEEEEEEE">
+
+    <ImageView
+        android:id="@+id/surveyImage"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:contentDescription="@string/species_profile_image"
+        android:visibility="gone"
+        android:scaleType="centerCrop" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:gravity="center_vertical"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/surveyName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dip"
+            android:textAppearance="?android:attr/textAppearanceMedium" 
+            android:hint="@string/touch_to_select"/>
+ 
+        <TextView
+            android:id="@+id/surveyDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dip"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textStyle="italic" 
+            />
+
+     </LinearLayout>
+     <ImageView
+        android:id="@+id/defaulticon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:contentDescription="@string/species_profile_image"
+        android:src="@drawable/green_tick" />
+
+</LinearLayout>

@@ -1,0 +1,51 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        mavenLocal()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.4'
+    }
+}
+apply plugin: 'android'
+
+dependencies {
+    compile project(':library:ActionBarSherlock:actionbarsherlock')
+    compile project(':library:Android-ViewPagerIndicator:library')
+    compile project(':library:android-mapviewballoons:android-mapviewballoons')
+    compile project(':library:google-play-services_lib')
+    compile files('libs/spring-android-core-1.0.0.RELEASE.jar')
+    compile files('libs/spring-android-rest-template-1.0.0.RELEASE.jar')
+    compile files('libs/gson-2.2.2.jar')
+    compile files('libs/universal-image-loader-1.8.4.jar')
+    compile files('libs/jsoup-1.6.3.jar')
+    compile files('libs/CWAC-LoaderEx.jar')
+    compile files('libs/CWAC-MergeAdapter.jar')
+    compile files('libs/CWAC-SackOfViewsAdapter.jar')
+    compile files('libs/universal-image-loader.jar')
+    compile files('libs/actionbarsherlock-plugin-maps-4.1.0.jar')
+
+}
+
+android {
+    compileSdkVersion 'Google Inc.:Google APIs:16'
+    buildToolsVersion "17"
+
+    defaultConfig {
+        minSdkVersion 7
+        targetSdkVersion 17
+    }
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src']
+            resources.srcDirs = ['src']
+            aidl.srcDirs = ['src']
+            renderscript.srcDirs = ['src']
+            res.srcDirs = ['res']
+            assets.srcDirs = ['assets']
+        }
+
+        instrumentTest.setRoot('tests')
+    }
+}

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RelativeLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@drawable/action_bar_background" >
+
+    <au.org.ala.fielddata.mobile.ui.NumberedImageButton
+        android:id="@+id/viewSavedRecordsButton"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:padding="5dp"
+        android:src="@drawable/saved_records_icon_1" 
+        android:contentDescription="@string/view_saved_records_description"
+        style="@style/FieldData.ActionButton"/>
+
+    <ImageButton
+        android:id="@+id/viewSpeciesListButton"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_alignBottom="@id/viewSavedRecordsButton"
+        android:layout_toRightOf="@id/viewSavedRecordsButton"
+        android:padding="5dp"
+        android:src="@drawable/search_species_icon"
+        android:contentDescription="@string/view_species_list_description"
+        style="@style/FieldData.ActionButton" />
+
+    <ImageButton
+        android:id="@+id/newRecordButton"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_alignBottom="@id/viewSavedRecordsButton"
+        android:layout_toRightOf="@id/viewSpeciesListButton"
+        android:padding="5dp"
+        android:src="@drawable/add_record_icon_1"
+        android:contentDescription="@string/new_record_description"
+        style="@style/FieldData.ActionButton" />
+
+</RelativeLayout>

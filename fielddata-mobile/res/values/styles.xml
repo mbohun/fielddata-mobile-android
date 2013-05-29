@@ -1,0 +1,131 @@
+<!--
+  Copyright (C) 2010 Atlas of Living Australia
+  All Rights Reserved.
+   
+  The contents of this file are subject to the Mozilla Public
+  License Version 1.1 (the "License"); you may not use this file
+  except in compliance with the License. You may obtain a copy of
+  the License at http://www.mozilla.org/MPL/
+   
+  Software distributed under the License is distributed on an "AS
+  IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+  implied. See the License for the specific language governing
+  rights and limitations under the License.
+-->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="AppTheme" parent="@style/Theme.Sherlock.Light">
+        <item name="vpiTitlePageIndicatorStyle">@style/CustomTitlePageIndicator</item>
+        <item name="actionBarStyle">@style/FieldData.ActionBar</item>
+        <item name="android:windowBackground">@drawable/roundedrectangle</item>
+        <item name="actionBarTabStyle">@style/FieldData.ActionBarTab</item> 
+    </style>
+    
+    <style name="SplashScreen" parent="@android:style/Theme">
+        <item name="android:padding">0dp</item>
+        <item name="android:windowBackground">@android:color/black</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowNoTitle">true</item>
+        
+        <item name="android:windowFrame">@null</item>
+    </style>
+       
+      <style name="CustomTitlePageIndicator" >
+        <item name="android:background">#eeeeee</item>
+        <item name="footerColor">@color/headerLabelBackgroundContrast</item>
+        <item name="footerLineHeight">2dp</item>
+        <item name="footerIndicatorHeight">3dp</item>
+        <item name="footerIndicatorStyle">underline</item>
+        <item name="android:textColor">#000000</item>
+        <item name="selectedColor">#000000</item>
+        
+        <item name="android:textSize">14dp</item>
+        <item name="selectedBold">true</item>
+        <item name="android:textSize">12sp</item>
+        <item name="topPadding">10dp</item>
+        <item name="footerPadding">10dp</item>
+        
+    </style>
+    
+    <style name="FieldData.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid">
+        <item name="titleTextStyle">@style/FieldData.ActionBar.Title</item>
+        
+        <item name="subtitleTextStyle">@style/FieldData.ActionBar.Subtitle</item>
+        
+        <item name="background">@drawable/action_bar_background</item>
+        <item name="android:background">@drawable/action_bar_background</item>
+        
+        <item name="actionBarItemBackground">@drawable/ad_tab_unselected_holo</item>
+        <item name="backgroundStacked">@drawable/ad_tab_unselected_holo</item>
+        <item name="backgroundSplit">@drawable/ad_tab_unselected_holo</item>
+        <item name="homeAsUpIndicator">@drawable/abs__ic_ab_back_holo_light</item>
+        <item name="progressBarStyle">@style/Widget.Sherlock.Light.ProgressBar.Horizontal</item>
+        <item name="indeterminateProgressStyle">@style/Widget.Sherlock.Light.ProgressBar</item>
+    </style>
+    
+    <style name="FieldData.ActionBarTab" parent="@style/Widget.Sherlock.ActionBar.TabView">
+         <item name="android:background">@drawable/abs__tab_indicator_ab_holo</item>
+    </style>
+    
+    <style name="FieldData.ActionBar.Title" parent="@style/TextAppearance.Sherlock.Widget.ActionBar.Title">
+       
+        <item name="android:colorBackground">#3d5978</item>
+        <item name="android:textColor">#FFFFFF</item>
+        
+    </style>
+    
+    <style name="FieldData.ActionBar.Subtitle" parent="@style/TextAppearance.Sherlock.Widget.ActionBar.Subtitle">
+         <item name="background">@drawable/ad_tab_unselected_holo</item>
+        <item name="android:background">#3d5978</item>
+        <item name="android:textColor">#EEEEEE</item>
+        
+    </style>
+   
+    <style name="FieldData.HeaderLabel" parent="@android:style/Widget.TextView">
+        <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+        <item name="android:singleLine">false</item>
+      
+    </style>
+    <style name="FieldData.CategoryHeader" parent="@android:style/Widget.TextView">
+        <item name="android:singleLine">false</item>
+      	<item name="android:background">#888888</item>
+      	<item name="android:textColor">#FFFFFF</item>
+      	<item name="android:textStyle">bold</item>
+    </style>
+    
+   
+           
+    <style name="EditEventCustomActionButton" parent="@style/Widget.Sherlock.Light.ActionButton">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:focusable">true</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="EditEventCustomActionButtonImage">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:padding">4dp</item>
+    </style>
+
+    <style name="EditEventCustomActionButtonText">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textAppearance">@style/TextAppearance.Sherlock.Widget.ActionBar.Menu</item>
+        <item name="android:textColor">?android:attr/actionMenuTextColor</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">none</item>
+        <item name="android:padding">4dp</item>
+    </style>
+    
+    <style name="ScientificName" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textStyle">italic</item>
+    </style>
+    
+    <style name="DateSpinner" parent="@android:style/Widget.Spinner">
+        <item name="android:paddingBottom">5dp</item>
+    </style>
+    
+</resources>

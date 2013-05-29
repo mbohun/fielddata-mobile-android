@@ -1,0 +1,67 @@
+<!--
+  Copyright (C) 2010 Atlas of Living Australia
+  All Rights Reserved.
+   
+  The contents of this file are subject to the Mozilla Public
+  License Version 1.1 (the "License"); you may not use this file
+  except in compliance with the License. You may obtain a copy of
+  the License at http://www.mozilla.org/MPL/
+   
+  Software distributed under the License is distributed on an "AS
+  IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+  implied. See the License for the specific language governing
+  rights and limitations under the License.
+-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" 
+    android:background="#CCCCCC" xmlns:app="http://schemas.android.com/apk/res-auto">
+
+   <com.viewpagerindicator.TitlePageIndicator
+        android:id="@+id/titles"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        app:clipPadding="18dp"
+        android:visibility="gone" /> 
+    <ImageView
+        android:id="@+id/leftArrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="12dp"
+        android:src="@drawable/indicator_prev_arrow"
+        android:contentDescription="@string/previous"
+        android:visibility="gone"
+        android:paddingLeft="3dp"
+        android:paddingRight="3dp"
+        
+        />
+    <ImageView
+        android:id="@+id/rightArrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="12dp"
+        android:src="@drawable/indicator_next_arrow"
+        android:contentDescription="@string/next"
+        android:visibility="gone"
+        android:paddingLeft="3dp"
+        android:paddingRight="3dp"
+        
+        />
+    
+    <au.org.ala.fielddata.mobile.ui.ValidatingViewPager
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/surveyPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+         android:layout_marginBottom="5dp"
+         android:layout_below="@id/titles"
+         android:layout_alignParentLeft="true" />   
+
+</RelativeLayout>
