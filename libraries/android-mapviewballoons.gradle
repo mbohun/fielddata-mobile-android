@@ -12,12 +12,12 @@ dependencies {
 }
 
 android {
-    compileSdkVersion 17
+    compileSdkVersion 'Google Inc.:Google APIs:17' 
     buildToolsVersion "17"
 
     defaultConfig {
         minSdkVersion 7
-        targetSdkVersion 'Google Inc.:Google APIs:17'
+        targetSdkVersion 17 
     }
     sourceSets {
         main {
