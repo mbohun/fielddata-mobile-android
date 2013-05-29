@@ -20,5 +20,7 @@ project(':libraries:ActionBarSherlock:actionbarsherlock') {
   version = '4.3.2-SNAPSHOT'
 }
 
-
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.6'
+}
 apply plugin: 'android-reporting'
