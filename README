@@ -10,4 +10,5 @@ Extras
 
 The ANDROID_HOME environment variable needs to be set.
 
-The libraries/setupLibraries.bash script must be run before the build will pass.
+The libraries/setupLibraries.bash script must be run before the build will pass.  This script clones some github
+repositories, which requires git 1.7+
