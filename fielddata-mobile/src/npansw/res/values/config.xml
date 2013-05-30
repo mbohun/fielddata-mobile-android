@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">"NPA's Bio Tag</string>
+    <bool name="show_splash_screen">true</bool>
+    <string-array name="portal_names">
+        <item>National Parks Association of NSW</item>
+    </string-array>
+</resources>

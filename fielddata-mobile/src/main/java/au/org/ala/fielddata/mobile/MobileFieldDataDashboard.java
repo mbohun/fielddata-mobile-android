@@ -94,8 +94,9 @@ public class MobileFieldDataDashboard extends SherlockFragmentActivity implement
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		showSplashScreen();
-		
+        if (getResources().getBoolean(R.bool.show_splash_screen)) {
+		    showSplashScreen();
+        }
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
 		setContentView(R.layout.activity_mobile_data_dashboard);
@@ -107,7 +108,7 @@ public class MobileFieldDataDashboard extends SherlockFragmentActivity implement
 		status = (TextView) findViewById(R.id.status);
 
 		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-		String[] titles = new String[] { "Surveys", "Species", "Records" };
+		String[] titles = getResources().getStringArray(R.array.tab_titles);
 
 		viewPager = (ViewPager) findViewById(R.id.tabContent);
 		TabsAdapter tabsAdapter = new TabsAdapter(this, viewPager);

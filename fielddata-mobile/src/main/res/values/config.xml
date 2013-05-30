@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NPA NSW</string>
+    <bool name="show_splash_screen">false</bool>
+    <string-array name="portal_names">
+        <item>Condamine Alliance"</item>
+        <item>National Parks Association of NSW</item>
+    </string-array>
+</resources>

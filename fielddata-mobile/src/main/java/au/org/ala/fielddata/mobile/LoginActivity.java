@@ -51,7 +51,7 @@ public class LoginActivity extends SherlockActivity implements OnClickListener{
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.activity_login);
-		portals = Config.getPortalNames();
+		portals = getResources().getStringArray(R.array.portal_names);
 		((Spinner)findViewById(R.id.portal)).setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, portals));
 		if (portals.length > 1) {
 			findViewById(R.id.portalLbl).setVisibility(View.VISIBLE);

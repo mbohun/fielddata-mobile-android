@@ -63,14 +63,6 @@
             android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
-            android:name="au.org.ala.fielddata.mobile.SpeciesSelectionActivity"
-            android:label="@string/title_species_selection" >
-        </activity>
-        <activity
-            android:name="au.org.ala.fielddata.mobile.SpeciesListActivity"
-            android:label="@string/title_species_list" >
-        </activity>
-        <activity
             android:name="au.org.ala.fielddata.mobile.LocationSelectionActivity"
             android:label="@string/title_activity_location_selection" >
         </activity>
@@ -78,10 +70,6 @@
             android:name="au.org.ala.fielddata.mobile.map.WayPointActivity"
             android:label="@string/title_activity_location_selection"
             android:uiOptions="splitActionBarWhenNarrow" >
-        </activity>
-        <activity
-            android:name="au.org.ala.fielddata.mobile.ViewSavedRecordsActivity"
-            android:label="@string/title_activity_view_saved_records" >
         </activity>
         <activity
             android:name="au.org.ala.fielddata.mobile.pref.EditPreferences"
