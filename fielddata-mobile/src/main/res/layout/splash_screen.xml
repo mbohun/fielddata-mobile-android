@@ -8,6 +8,7 @@
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
 	    android:src="@drawable/background_image"
-	    android:scaleType="fitXY"
-	    android:contentDescription="Splash Screen"/>
+	    android:scaleType="centerCrop"
+	    android:contentDescription="Splash Screen"
+        android:cropToPadding="false"/>
 </RelativeLayout>
