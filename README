@@ -1,0 +1,13 @@
+Prequisites:
+
+Android SDK.
+------------
+Current SDK dependencies are:
+Android-17
+Google APIS 17
+Android-14
+Extras
+
+The ANDROID_HOME environment variable needs to be set.
+
+The libraries/setupLibraries.bash script must be run before the build will pass.
