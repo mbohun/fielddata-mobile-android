@@ -36,6 +36,14 @@ android {
         minSdkVersion 7
         targetSdkVersion 17
     }
+
+    productFlavors {
+        npansw {
+            packageName "au.org.ala.fieldcapture.mobile.npansw"
+            versionCode 1
+            versionName "1.0"
+        }
+    }
     /*sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
