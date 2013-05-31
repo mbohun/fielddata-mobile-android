@@ -315,7 +315,7 @@ public class MobileFieldDataDashboard extends SherlockFragmentActivity implement
 
 			}
 
-			return new Model(user, portal);
+			return new Model(user, "");
 		}
 
 		@Override
