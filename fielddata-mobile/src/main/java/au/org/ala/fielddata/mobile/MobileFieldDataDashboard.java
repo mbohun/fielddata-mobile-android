@@ -19,9 +19,11 @@ import java.util.List;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.PackageManager;
@@ -35,6 +37,7 @@ import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.widget.TextView;
@@ -47,6 +50,7 @@ import au.org.ala.fielddata.mobile.pref.Preferences;
 import au.org.ala.fielddata.mobile.service.FieldDataService;
 import au.org.ala.fielddata.mobile.service.FieldDataServiceClient;
 import au.org.ala.fielddata.mobile.service.LocationServiceHelper;
+import au.org.ala.fielddata.mobile.service.SurveyDownloadService;
 import au.org.ala.fielddata.mobile.ui.MenuHelper;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -82,8 +86,10 @@ public class MobileFieldDataDashboard extends SherlockFragmentActivity implement
 	private Preferences preferences;
 	private TextView status;
 	private ViewPager viewPager;
-	
-	/** 
+    private BroadcastReceiver broadcastReceiver;
+
+
+    /**
 	 * Tracks whether we have asked the user if they want to turn on their
 	 * GPS
 	 */
@@ -361,7 +367,9 @@ public class MobileFieldDataDashboard extends SherlockFragmentActivity implement
 	@Override
 	protected void onResume() {
 		super.onResume();
-
+        if (SurveyDownloadService.isDownloading()) {
+            listenForSurveyDownload();
+        }
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		prefs.registerOnSharedPreferenceChangeListener(this);
 		refreshPage();
@@ -372,6 +380,7 @@ public class MobileFieldDataDashboard extends SherlockFragmentActivity implement
 	public void onPause() {
 		super.onPause();
 
+        stopListeningForSurveyDownload();
         removeSplashScreen();
 
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -507,35 +516,10 @@ public class MobileFieldDataDashboard extends SherlockFragmentActivity implement
 		if (item.getItemId() == R.id.sync) {
 			setSupportProgressBarIndeterminateVisibility(true);
 
-			new AsyncTask<Void, Void, Void>() {
+            Intent downloadSurveys = new Intent(MobileFieldDataDashboard.this, SurveyDownloadService.class);
+            listenForSurveyDownload();
+            startService(downloadSurveys);
 
-				private boolean success;
-				
-				@Override
-				protected Void doInBackground(Void... params) {
-					try {
-						new FieldDataService(MobileFieldDataDashboard.this).downloadSurveys(null);
-						success = true;
-					}
-					catch (Exception e) {
-						success = false;
-					}
-					return null;
-				}
-
-				@Override
-				protected void onPostExecute(Void result) {
-					if (success) {
-						Toast.makeText(MobileFieldDataDashboard.this, "Surveys refreshed", Toast.LENGTH_SHORT).show();
-					}
-					else {
-						Toast.makeText(MobileFieldDataDashboard.this, "Refresh failed - please check your network", Toast.LENGTH_LONG).show();
-					}
-					refreshPage();
-				}
-			}.execute();
-
-			refreshPage();
 			return true;
 		} else if (item == newRecordMenuItem) {
 			Intent intent = new Intent(this, CollectSurveyData.class);
@@ -545,6 +529,31 @@ public class MobileFieldDataDashboard extends SherlockFragmentActivity implement
 		}
 		return new MenuHelper(this).handleMenuItemSelection(item);
 	}
+
+    private void listenForSurveyDownload() {
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                boolean success = intent.getBooleanExtra(SurveyDownloadService.RESULT_EXTRA, false);
+                if (success) {
+                    Toast.makeText(MobileFieldDataDashboard.this, "Surveys refreshed", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(MobileFieldDataDashboard.this, "Refresh failed - please check your network", Toast.LENGTH_LONG).show();
+                }
+                refreshPage();
+                stopListeningForSurveyDownload();
+            }
+        };
+        IntentFilter downloadFilter = new IntentFilter(SurveyDownloadService.FINISHED_ACTION);
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, downloadFilter);
+    }
+
+    private void stopListeningForSurveyDownload() {
+        if (broadcastReceiver != null) {
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
+        }
+    }
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		if (key.equals("serverHostName") || key.equals("contextName")) {
