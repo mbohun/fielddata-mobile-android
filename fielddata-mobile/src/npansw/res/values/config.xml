@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">"NPA's Bio Tag</string>
     <bool name="show_splash_screen">true</bool>
+    <integer name="splash_screen_duration">4000</integer>
     <string-array name="portal_names">
         <item>National Parks Association of NSW</item>
     </string-array>

@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">NPA NSW</string>
     <bool name="show_splash_screen">false</bool>
+    <integer name="splash_screen_duration">0</integer>
     <string-array name="portal_names">
         <item>Condamine Alliance"</item>
         <item>National Parks Association of NSW</item>

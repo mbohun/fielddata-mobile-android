@@ -79,7 +79,6 @@ public class MobileFieldDataDashboard extends SherlockFragmentActivity implement
 	}
 	
 	protected Dialog splashDialog;
-	
 	private Preferences preferences;
 	private TextView status;
 	private ViewPager viewPager;
@@ -94,8 +93,10 @@ public class MobileFieldDataDashboard extends SherlockFragmentActivity implement
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-        if (getResources().getBoolean(R.bool.show_splash_screen)) {
-		    showSplashScreen();
+        // Only show the splash screen on startup, and if the variant has been configured to do so.
+        if (savedInstanceState == null && getResources().getBoolean(R.bool.show_splash_screen)) {
+
+            showSplashScreen(getResources().getInteger(R.integer.splash_screen_duration));
         }
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
@@ -133,7 +134,8 @@ public class MobileFieldDataDashboard extends SherlockFragmentActivity implement
 
 	}
 	
-	protected void showSplashScreen() {
+	protected void showSplashScreen(int duration) {
+
 	    splashDialog = new Dialog(this, R.style.SplashScreen) {
 	    	@Override
 	    	public void onBackPressed() {
@@ -144,14 +146,14 @@ public class MobileFieldDataDashboard extends SherlockFragmentActivity implement
 	    splashDialog.setContentView(R.layout.splash_screen);
 	    splashDialog.setCancelable(false);
 	    splashDialog.show();
-	     
+
 	    // Set Runnable to remove splash screen
 	    final Handler handler = new Handler();
 	    handler.postDelayed(new Runnable() {
 	      public void run() {
 	        removeSplashScreen();
 	      }
-	    }, 4000);
+	    }, duration);
 	}
 	
 	/**
@@ -371,6 +373,8 @@ public class MobileFieldDataDashboard extends SherlockFragmentActivity implement
 	@Override
 	public void onPause() {
 		super.onPause();
+
+        removeSplashScreen();
 
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		prefs.unregisterOnSharedPreferenceChangeListener(this);
