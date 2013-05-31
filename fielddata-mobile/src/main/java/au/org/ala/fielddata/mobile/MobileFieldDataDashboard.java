@@ -314,14 +314,12 @@ public class MobileFieldDataDashboard extends SherlockFragmentActivity implement
 				user = users.get(0);
 
 			}
-			String portal = "NPA NSW";//preferences.getFieldDataPortalName();
 
 			return new Model(user, portal);
 		}
 
 		@Override
 		protected void onPostExecute(Model model) {
-			getSupportActionBar().setTitle(Utils.bold(model.getPortal()));
 
 			User user = model.getUser();
 			if (user != null) {
