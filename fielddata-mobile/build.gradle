@@ -4,7 +4,7 @@ buildscript {
         mavenLocal()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.4.1'
+        classpath 'com.android.tools.build:gradle:0.4.2'
     }
 }
 apply plugin: 'android'
@@ -43,6 +43,11 @@ android {
             versionCode 1
             versionName "1.0"
 
+        }
+        ala {
+            packageName "au.org.ala.fieldcapture.mobile.ala"
+            versionCode 1
+            versionName "1.0"
         }
     }
 
