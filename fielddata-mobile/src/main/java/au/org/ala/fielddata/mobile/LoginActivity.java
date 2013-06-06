@@ -108,7 +108,8 @@ public class LoginActivity extends SherlockActivity implements OnClickListener{
 					if (intent.getAction().equals(SurveyDownloadService.PROGRESS_ACTION)) {
 						onProgressUpdate(
 							intent.getIntExtra(SurveyDownloadService.NUMBER_EXTRA, 0), 
-							intent.getIntExtra(SurveyDownloadService.COUNT_EXTRA, 0));
+							intent.getIntExtra(SurveyDownloadService.COUNT_EXTRA, 0),
+                            intent.getIntExtra(SurveyDownloadService.SPECIES_EXTRA, 0));
 					}
 					else if (intent.getAction().equals(SurveyDownloadService.FINISHED_ACTION)) {
 						if (pd != null && pd.isShowing()) {
@@ -138,14 +139,18 @@ public class LoginActivity extends SherlockActivity implements OnClickListener{
 			return;
 		}
 		int value = values[0];
-		if (value == 0) {
+		if (value == 0 && values[2] == 0) {
 			dialogTitle = "Downloading surveys..."; 
 			pd.setTitle(dialogTitle);
 		}
-		else {
-			dialogMessage = "Downloading survey "+value+"..."; 
+		else if (values[2] == 0) {
+			dialogMessage = "Downloading survey "+value+" of "+values[1];
 			pd.setMessage(dialogMessage);
 		}
+        else if (values[2] > 0) {
+            dialogMessage = "Downloading species for survey "+values[2]+"...";
+            pd.setMessage(dialogMessage);
+        }
 	}
 
 
@@ -179,8 +184,11 @@ public class LoginActivity extends SherlockActivity implements OnClickListener{
 					SurveyDownloadCallback callback = new SurveyDownloadCallback() {
 						
 						public void surveysDownloaded(int number, int count) {
-							publishProgress(number);
+							publishProgress(number, count, 0);
 						}
+                        public void speciesDownloaded(int surveyNumber) {
+                            publishProgress(0, 0, surveyNumber);
+                        }
 					};
 					LoginService loginService = new LoginService(LoginActivity.this);
 
@@ -189,7 +197,7 @@ public class LoginActivity extends SherlockActivity implements OnClickListener{
 						String password = passwordField.getText().toString();
 						LoginResponse response = loginService.login(username, password, portalName);
 
-						publishProgress(0);
+						publishProgress(0,0,0);
 						clearPersistantData();
 						initialiseUserAndSurveys(response, callback);
 						

@@ -14,8 +14,10 @@ public class SurveyDownloadService extends IntentService implements SurveyDownlo
 
 	public static final String PROGRESS_ACTION = "Progress";
 	public static final String FINISHED_ACTION = "Finished";
-	public static final String NUMBER_EXTRA = "number";
-	public static final String COUNT_EXTRA = "count";
+	public static final String NUMBER_EXTRA = "surveyNumber";
+    public static final String SPECIES_EXTRA = "speciesForSurveyNumber";
+
+    public static final String COUNT_EXTRA = "count";
     public static final String RESULT_EXTRA = "success";
 
     // This is a bit yuck, but the alternative is to use a bound service
@@ -44,7 +46,7 @@ public class SurveyDownloadService extends IntentService implements SurveyDownlo
         try {
             SurveyDownloadService.setDownloading(true);
             new FieldDataService(this).downloadSurveys(this);
-            SurveyDownloadService.setDownloading(false);
+
 
             // At this point the app can function correctly, however we will
             // continue to pre-cache the images.
@@ -69,8 +71,11 @@ public class SurveyDownloadService extends IntentService implements SurveyDownlo
             Log.i("SurveyDownloadService", "Image download finished.");
         }
         catch (Exception e) {
-            Log.e("SurveyDownloadService", "Survey download failed.");
+            Log.e("SurveyDownloadService", "Survey download failed.",e);
             notifyFinished(false);
+        }
+        finally {
+            SurveyDownloadService.setDownloading(false);
         }
 
 	}
@@ -93,5 +98,15 @@ public class SurveyDownloadService extends IntentService implements SurveyDownlo
 		
 		Log.i("SurveyDownloadService", "update...");
 	}
+
+    public void speciesDownloaded(int survey) {
+
+        Intent progressIntent = new Intent(PROGRESS_ACTION);
+        progressIntent.putExtra(SPECIES_EXTRA, survey);
+
+        LocalBroadcastManager.getInstance(this).sendBroadcast(progressIntent);
+
+        Log.i("SurveyDownloadService", "update...");
+    }
 	
 }

@@ -100,7 +100,7 @@ public class FieldDataServiceClient extends WebServiceClient {
 		
 	}
 
-	public List<Survey> downloadSurveys() {
+	public List<Survey> downloadSurveys(FieldDataService.SurveyDownloadCallback callback) {
 
 		String url = getServerUrl() + surveyUrl + ident;
 
@@ -114,9 +114,16 @@ public class FieldDataServiceClient extends WebServiceClient {
 		List<Survey> surveys = new ArrayList<Survey>();
 		List<Integer> speciesIdList = new ArrayList<Integer>();
 		//List<Species> species = new ArrayList<Species>();
+        int count = 0;
+        int total = result.length;
 		for (UserSurveyResponse userSurvey : result) {
 			String downloadedSurveys = jsonSurveyIds(surveys);
-			DownloadSurveyResponse surveyResponse = restTemplate.getForObject(
+
+            if (callback != null) {
+                callback.surveysDownloaded(++count, total);
+            }
+
+            DownloadSurveyResponse surveyResponse = restTemplate.getForObject(
 					String.format(url, userSurvey.id, ident, downloadedSurveys),
 					DownloadSurveyResponse.class);
 			

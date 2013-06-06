@@ -33,6 +33,8 @@ public class FieldDataService {
 
 	public static interface SurveyDownloadCallback {
 		public void surveysDownloaded(int number, int count);
+
+        public void speciesDownloaded(int survey);
 	}
 	
 	private FieldDataServiceClient webServiceClient;
@@ -53,7 +55,7 @@ public class FieldDataService {
 	public List<Survey> downloadSurveys(SurveyDownloadCallback callback) {
 		
 		long start = System.currentTimeMillis();
-		List<Survey> surveys = webServiceClient.downloadSurveys(); 
+		List<Survey> surveys = webServiceClient.downloadSurveys(callback);
 		long end = System.currentTimeMillis();
 		Log.i("FieldDataService", "downloadSurveys took: "+(end-start));
 		
@@ -70,13 +72,10 @@ public class FieldDataService {
 			db.beginTransaction();
 			SpeciesDAO speciesDAO = new SpeciesDAO(ctx);
 			SurveyDAO surveyDAO = new SurveyDAO(ctx);
-			int count = 0;
 			List<Integer> surveysWithSpecies = new ArrayList<Integer>();
+            int count = 0;
 			for (Survey survey : surveys) {
-				
-				if (callback != null) {
-					callback.surveysDownloaded(count++, -1);
-				}
+
 				// If we already have a survey with the same id, replace it.
 				Survey existingSurvey = surveyDAO.findByServerId(Survey.class, survey.server_id, db);
 				if (existingSurvey != null) {
@@ -95,7 +94,10 @@ public class FieldDataService {
 				int maxResults = 50;
 				
 				List<Species> speciesList;
-				do {	
+				if (callback != null) {
+                    callback.speciesDownloaded(++count);
+                }
+                do {
 				
 					start = System.currentTimeMillis();
 					speciesList = webServiceClient.downloadSpecies(survey, surveysWithSpecies, first, maxResults);
