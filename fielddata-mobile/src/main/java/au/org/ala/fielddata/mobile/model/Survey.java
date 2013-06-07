@@ -35,6 +35,8 @@ public class Survey extends Persistent {
 	public String name;
 	public String description;
 	public MapDefaults map;
+    public boolean locationPolygon = false;
+    public int photoPointAttribute = -1;
 	
 	@SerializedName("attributesAndOptions")
 	public List<Attribute> attributes;
