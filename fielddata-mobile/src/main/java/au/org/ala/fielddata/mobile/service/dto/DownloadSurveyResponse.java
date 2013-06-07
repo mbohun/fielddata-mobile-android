@@ -39,6 +39,9 @@ public class DownloadSurveyResponse {
 		
 	public String name;
 	public String description;
+
+    public boolean locationPolygon = false;
+    public int photoPointAttribute = -1;
 	
 	@SerializedName("attributesAndOptions")
 	public List<Attribute> attributes;
