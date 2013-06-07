@@ -262,8 +262,7 @@ public class RecordDAO extends GenericDAO<Record> {
 		
 		try {
 			db.beginTransaction();
-			db.delete(recordTable, null, null);
-			db.delete(attributeValueTable, null, null);
+			deleteAll(db);
 			db.setTransactionSuccessful();
 		}
 		finally {
@@ -273,6 +272,11 @@ public class RecordDAO extends GenericDAO<Record> {
 		}
 		}
 	}
+
+    public void deleteAll(SQLiteDatabase db) {
+        db.delete(recordTable, null, null);
+        db.delete(attributeValueTable, null, null);
+    }
 
 	public void delete(Class<Record> recordClass, Integer id) {
 		synchronized(helper) {

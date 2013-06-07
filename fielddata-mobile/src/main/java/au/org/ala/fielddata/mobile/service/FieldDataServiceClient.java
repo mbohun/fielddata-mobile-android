@@ -33,10 +33,12 @@ import android.view.View;
 import android.widget.ImageView;
 import au.org.ala.fielddata.mobile.model.Record;
 import au.org.ala.fielddata.mobile.model.Species;
+import au.org.ala.fielddata.mobile.model.SpeciesGroup;
 import au.org.ala.fielddata.mobile.model.Survey;
 import au.org.ala.fielddata.mobile.pref.Preferences;
 import au.org.ala.fielddata.mobile.service.dto.DownloadSpeciesResponse;
 import au.org.ala.fielddata.mobile.service.dto.DownloadSurveyResponse;
+import au.org.ala.fielddata.mobile.service.dto.SpeciesGroupResponse;
 import au.org.ala.fielddata.mobile.service.dto.SyncRecordsResponse;
 import au.org.ala.fielddata.mobile.service.dto.UserSurveyResponse;
 
@@ -166,6 +168,9 @@ public class FieldDataServiceClient extends WebServiceClient {
 		survey.description = surveyResponse.details.description;
 		survey.speciesIds = surveyResponse.details.speciesIds;
 		survey.imageUrl = surveyResponse.imageUrl;
+        survey.locationPolygon = surveyResponse.locationPolygon;
+        survey.photoPointAttribute = surveyResponse.photoPointAttribute;
+
 		return survey;
 	}
 	
@@ -224,5 +229,20 @@ public class FieldDataServiceClient extends WebServiceClient {
 			}
 		});
 	}
+
+    public List<SpeciesGroup> downloadSpeciesGroups() {
+
+        String url = getServerUrl()+"/species/speciesGroups";
+        RestTemplate restTemplate = getRestTemplate();
+        SpeciesGroupResponse[] response = restTemplate.getForObject(url, SpeciesGroupResponse[].class);
+        if (response == null) {
+            return new ArrayList<SpeciesGroup>(0);
+        }
+        List<SpeciesGroup> speciesGroups = new ArrayList<SpeciesGroup>(response.length);
+        for (SpeciesGroupResponse responseGroup : response) {
+            speciesGroups.add(responseGroup.toSpeciesGroup());
+        }
+        return speciesGroups;
+    }
 
 }

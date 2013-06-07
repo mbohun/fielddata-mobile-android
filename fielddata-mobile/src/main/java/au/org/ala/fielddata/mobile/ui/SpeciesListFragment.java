@@ -60,12 +60,16 @@ public class SpeciesListFragment extends SherlockListFragment implements LoaderC
     		
     	}
     }
+
+    public void refreshSpeciesList() {
+        LoaderManager manager = getActivity().getSupportLoaderManager();
+        manager.restartLoader(0, null, this);
+    }
     
     @Override
 	public void onResume() {
 		super.onResume();
-		LoaderManager manager = getActivity().getSupportLoaderManager();
-		manager.restartLoader(0, null, this);
+
 	}
 
 	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
@@ -112,10 +116,21 @@ public class SpeciesListFragment extends SherlockListFragment implements LoaderC
 				row.setTag(viewHolder);
 			}
 
+            String previousGroup = "All Species";
+            int position = cursor.getPosition();
+            if (position > 0) {
+                cursor.moveToPrevious();
+                previousGroup = cursor.getString(cursor.getColumnIndex(SpeciesDAO.SPECIES_GROUP_NAME_COLUMN_NAME));
+                cursor.moveToPosition(position);
+            }
+
 			viewHolder.populate(
 					cursor.getString(cursor.getColumnIndex(SpeciesDAO.SCIENTIFIC_NAME_COLUMN_NAME)), 
 					cursor.getString(cursor.getColumnIndex(SpeciesDAO.COMMON_NAME_COLUMN_NAME)),
-					cursor.getString(cursor.getColumnIndex(SpeciesDAO.IMAGE_URL_COLUMN_NAME)));
+					cursor.getString(cursor.getColumnIndex(SpeciesDAO.IMAGE_URL_COLUMN_NAME)),
+                    cursor.getString(cursor.getColumnIndex(SpeciesDAO.SPECIES_GROUP_NAME_COLUMN_NAME)),
+                    previousGroup);
+
 			
 		}
 		

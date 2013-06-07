@@ -252,15 +252,7 @@ public class LoginActivity extends SherlockActivity implements OnClickListener{
 		
 		GenericDAO<User> userDAO = new GenericDAO<User>(this);
 		userDAO.deleteAll(User.class);
-		
-		GenericDAO<Survey> surveyDAO = new GenericDAO<Survey>(this);
-		surveyDAO.deleteAll(Survey.class);
-		
-		GenericDAO<Record> recordDAO = new GenericDAO<Record>(this);
-		recordDAO.deleteAll(Record.class);
-		
-		SpeciesDAO speciesDAO = new SpeciesDAO(this);
-		speciesDAO.deleteAll(Species.class);
+
 	}
 	
 	/**

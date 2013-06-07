@@ -37,6 +37,13 @@ android {
         targetSdkVersion 17
     }
 
+    signingConfigs {
+        ala {
+
+
+        }
+    }
+
     productFlavors {
         npansw {
             packageName "au.org.ala.fieldcapture.mobile.npansw"
@@ -48,6 +55,19 @@ android {
             packageName "au.org.ala.fieldcapture.mobile.ala"
             versionCode 1
             versionName "1.0"
+        }
+        nrmplus {
+            packageName "au.org.ala.fielddata.mobile.nrmplus"
+            versionCode 3
+            versionName "1.1"
+        }
+    }
+
+    buildTypes {
+        release {
+            debuggable false
+            jniDebugBuild false
+            //signingConfig signingConfigs.ala
         }
     }
 

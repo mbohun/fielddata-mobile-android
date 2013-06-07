@@ -22,10 +22,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import au.org.ala.fielddata.mobile.Utils;
 import au.org.ala.fielddata.mobile.dao.DatabaseHelper;
+import au.org.ala.fielddata.mobile.dao.RecordDAO;
 import au.org.ala.fielddata.mobile.dao.SpeciesDAO;
 import au.org.ala.fielddata.mobile.dao.SurveyDAO;
 import au.org.ala.fielddata.mobile.model.Attribute.AttributeType;
+import au.org.ala.fielddata.mobile.model.Record;
 import au.org.ala.fielddata.mobile.model.Species;
+import au.org.ala.fielddata.mobile.model.SpeciesGroup;
 import au.org.ala.fielddata.mobile.model.Survey;
 import au.org.ala.fielddata.mobile.pref.Preferences;
 
@@ -71,10 +74,21 @@ public class FieldDataService {
 		try {
 			db.beginTransaction();
 			SpeciesDAO speciesDAO = new SpeciesDAO(ctx);
+            speciesDAO.deleteAll(db);
 			SurveyDAO surveyDAO = new SurveyDAO(ctx);
-			List<Integer> surveysWithSpecies = new ArrayList<Integer>();
+            surveyDAO.deleteAll(Survey.class, db);
+
+            RecordDAO recordDAO = new RecordDAO(ctx);
+            recordDAO.deleteAll(db);
+
+            List<Integer> surveysWithSpecies = new ArrayList<Integer>();
             int count = 0;
-			for (Survey survey : surveys) {
+
+            List<SpeciesGroup> groups = webServiceClient.downloadSpeciesGroups();
+            speciesDAO.saveSpeciesGroups(groups, db);
+
+
+            for (Survey survey : surveys) {
 
 				// If we already have a survey with the same id, replace it.
 				Survey existingSurvey = surveyDAO.findByServerId(Survey.class, survey.server_id, db);
@@ -89,7 +103,9 @@ public class FieldDataService {
 				}
 				surveyDAO.save(survey, db);
 				speciesDAO.saveSpeciesSurveyAssociation(survey, db);
-				
+
+
+
 				int first = 0;
 				int maxResults = 50;
 				

@@ -22,7 +22,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils.InsertHelper;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
+
 import au.org.ala.fielddata.mobile.model.Species;
+import au.org.ala.fielddata.mobile.model.SpeciesGroup;
 import au.org.ala.fielddata.mobile.model.Survey;
 
 public class SpeciesDAO extends GenericDAO<Species> {
@@ -75,11 +78,13 @@ public class SpeciesDAO extends GenericDAO<Species> {
 			" (survey_id INTEGER, species_id INTEGER)";
 	
 	public static final String SPECIES_GROUP_DDL = "CREATE TABLE "+SPECIES_GROUP_TABLE+
-			" (_id INTEGER PRIMARY KEY AUTOINCREMENT, "+
-			"  name TEXT, " +
-			"  parent_group_id INTEGER)";
-	
-	public SpeciesDAO(Context ctx) {
+			" (_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "server_id INTEGER, "+
+			"name TEXT, " +
+			"parent_group_id INTEGER)";
+    public static final String SPECIES_GROUP_NAME_COLUMN_NAME = "name";
+
+    public SpeciesDAO(Context ctx) {
 		super(ctx);
 	}
 
@@ -154,8 +159,9 @@ public class SpeciesDAO extends GenericDAO<Species> {
 			
 			try {
 				db.beginTransaction();
-				db.delete(SPECIES_TABLE, null, null);
-				db.delete(SURVEY_SPECIES_TABLE, null, null);
+
+                deleteAll(db);
+
 				db.setTransactionSuccessful();
 			} finally {
 				if (db != null) {
@@ -164,6 +170,12 @@ public class SpeciesDAO extends GenericDAO<Species> {
 			}
 		}
 	}
+
+    public void deleteAll(SQLiteDatabase db) {
+        db.delete(SPECIES_TABLE, null, null);
+        db.delete(SURVEY_SPECIES_TABLE, null, null);
+        db.delete(SPECIES_GROUP_TABLE, null, null);
+    }
 
 
 	private boolean map(Species species, long now, ContentValues values) {
@@ -215,9 +227,34 @@ public class SpeciesDAO extends GenericDAO<Species> {
 	}
 	
 	public Cursor loadSpecies() {
-		return helper.getReadableDatabase().query(
-				true, SPECIES_TABLE, new String[] {"_id", SCIENTIFIC_NAME_COLUMN_NAME, COMMON_NAME_COLUMN_NAME, IMAGE_URL_COLUMN_NAME}, 
-				null, null, null, null, "_id", null);
+
+        String query = "SELECT s._id, s."+SCIENTIFIC_NAME_COLUMN_NAME+", s."+COMMON_NAME_COLUMN_NAME+
+                ", s."+IMAGE_URL_COLUMN_NAME+", g.name"+
+                " from "+SPECIES_TABLE+" s left outer join "+SPECIES_GROUP_TABLE+
+                " g on s."+SPECIES_GROUP_COLUMN_NAME+"=g.server_id order by g.name, s."+COMMON_NAME_COLUMN_NAME;
+
+		return helper.getReadableDatabase().rawQuery(query, null);
 	}
+
+    public void saveSpeciesGroups(List<SpeciesGroup> groups, SQLiteDatabase db) {
+        InsertHelper insertHelper = new InsertHelper(db, SPECIES_GROUP_TABLE);
+
+        saveSpeciesGroups(groups, insertHelper);
+    }
+
+    private void saveSpeciesGroups(List<SpeciesGroup> groups, InsertHelper insertHelper) {
+        for (SpeciesGroup group : groups) {
+
+            insertHelper.prepareForInsert();
+            insertHelper.bind(2, group.getId());
+            insertHelper.bind(3, group.name);
+            insertHelper.bind(4, group.getId() != null ? group.getId() : -1);
+            insertHelper.execute();
+            Log.i("SpeciesDAO", "Saving group: " + group.name + ", id: " + group.getId());
+
+            saveSpeciesGroups(group.subgroups, insertHelper);
+
+        }
+    }
 	
 }

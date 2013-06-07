@@ -16,45 +16,62 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal" 
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
-    android:layout_marginTop="0dp"
-    android:layout_marginBottom="5dp"
-    android:padding="5dp"
+    android:orientation="vertical"
     android:background="#EEEEEEEE">
 
-    <ImageView
-        android:id="@+id/imageView1"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:contentDescription="@string/species_profile_image"
-        android:src="@drawable/no_photo" />
-
-    <LinearLayout
-        android:layout_width="fill_parent"
+    <TextView
+        android:id="@+id/separator"
+        style="?android:attr/listSeparatorTextViewStyle"
+        android:background="@color/headerLabelBackgroundContrast"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:gravity="center_vertical"
-        android:orientation="vertical" >
+        android:textColor="@android:color/black"
+        android:visibility="visible">
+    </TextView>
 
-        <TextView
-            android:id="@+id/commonName"
-            android:layout_width="wrap_content"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal"
+                  android:layout_marginLeft="10dp"
+                  android:layout_marginRight="10dp"
+                  android:layout_marginTop="0dp"
+                  android:layout_marginBottom="5dp"
+                  android:padding="5dp"
+                  android:background="#EEEEEEEE">
+
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="@string/species_profile_image"
+            android:src="@drawable/no_photo" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dip"
-            android:textAppearance="?android:attr/textAppearanceMedium" 
-            android:hint="@string/touch_to_select"/>
- 
-        <TextView
-            android:id="@+id/scientificName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dip"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textStyle="italic" 
-            />
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/commonName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dip"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:hint="@string/touch_to_select"/>
+
+            <TextView
+                android:id="@+id/scientificName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dip"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textStyle="italic"
+                />
 
            </LinearLayout>
-
+    </LinearLayout>
 </LinearLayout>

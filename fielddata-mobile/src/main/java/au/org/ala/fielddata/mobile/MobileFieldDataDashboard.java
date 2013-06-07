@@ -43,6 +43,8 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 import au.org.ala.fielddata.mobile.dao.GenericDAO;
+import au.org.ala.fielddata.mobile.dao.RecordDAO;
+import au.org.ala.fielddata.mobile.model.Record;
 import au.org.ala.fielddata.mobile.model.User;
 import au.org.ala.fielddata.mobile.nrmplus.R;
 import au.org.ala.fielddata.mobile.pref.EditPreferences;
@@ -372,8 +374,7 @@ public class MobileFieldDataDashboard extends SherlockFragmentActivity implement
         }
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		prefs.registerOnSharedPreferenceChangeListener(this);
-		refreshPage();
-
+        refreshPage();
 	}
 
 	@Override
@@ -411,6 +412,7 @@ public class MobileFieldDataDashboard extends SherlockFragmentActivity implement
 
 			executeAsyncTask(new InitDataTask());
 			executeAsyncTask(new StatusTask());
+
 		}
 	}
 
@@ -514,12 +516,22 @@ public class MobileFieldDataDashboard extends SherlockFragmentActivity implement
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.sync) {
-			setSupportProgressBarIndeterminateVisibility(true);
 
-            Intent downloadSurveys = new Intent(MobileFieldDataDashboard.this, SurveyDownloadService.class);
-            listenForSurveyDownload();
-            startService(downloadSurveys);
+            RecordDAO recordDAO = new RecordDAO(this);
+            if (recordDAO.count(Record.class) > 0) {
+                new AlertDialog.Builder(this)
+                        .setTitle("Unable to reload surveys")
+                        .setMessage("Please upload your saved Records and try again.")
+                        .setPositiveButton("OK", null)
+                        .show();
+            }
+            else {
+                setSupportProgressBarIndeterminateVisibility(true);
 
+                Intent downloadSurveys = new Intent(MobileFieldDataDashboard.this, SurveyDownloadService.class);
+                listenForSurveyDownload();
+                startService(downloadSurveys);
+            }
 			return true;
 		} else if (item == newRecordMenuItem) {
 			Intent intent = new Intent(this, CollectSurveyData.class);
@@ -541,7 +553,8 @@ public class MobileFieldDataDashboard extends SherlockFragmentActivity implement
                 else {
                     Toast.makeText(MobileFieldDataDashboard.this, "Refresh failed - please check your network", Toast.LENGTH_LONG).show();
                 }
-                refreshPage();
+                viewPager.setAdapter(viewPager.getAdapter());
+                setSupportProgressBarIndeterminateVisibility(false);
                 stopListeningForSurveyDownload();
             }
         };

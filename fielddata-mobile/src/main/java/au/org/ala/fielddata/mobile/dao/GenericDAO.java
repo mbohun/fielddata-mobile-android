@@ -241,7 +241,7 @@ public class GenericDAO<T extends Persistent> {
 			
 			try {
 				db.beginTransaction();
-				db.delete(tableName(modelClass), null, null);
+				deleteAll(modelClass, db);
 				db.setTransactionSuccessful();
 			} finally {
 				if (db != null) {
@@ -250,6 +250,10 @@ public class GenericDAO<T extends Persistent> {
 			}
 		}
 	}
+
+    public void deleteAll(Class<T> modelClass, SQLiteDatabase db) {
+        db.delete(tableName(modelClass), null, null);
+    }
 
 	public void delete(Class<T> modelClass, Integer id) {
 		synchronized (helper) {
