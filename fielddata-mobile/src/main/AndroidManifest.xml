@@ -67,6 +67,11 @@
             android:label="@string/title_activity_location_selection" >
         </activity>
         <activity
+                android:name="au.org.ala.fielddata.mobile.map.PointLocationSelectionActivity"
+                android:label="@string/title_activity_location_selection" >
+        </activity>
+
+        <activity
             android:name="au.org.ala.fielddata.mobile.map.WayPointActivity"
             android:label="@string/title_activity_location_selection"
             android:uiOptions="splitActionBarWhenNarrow" >
@@ -99,8 +104,7 @@
         </service>
          <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-         android:value="AIzaSyCyD75ig68FJJsU4gS7bYrhx_4_8MxvyK4" />
-           <!--  android:value="AIzaSyApH8-iLdRdomeh1bwzCicpKySpOBiZY00" /> -->
+         android:value="AIzaSyD3RFeSTGTokF1ZwOiisgx__JdCyzgF1UM" />
         
     </application>
 
