@@ -3,13 +3,27 @@
    
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-       
+
+
+
 	<fragment 
 	    android:id="@+id/map"
 		  android:windowActionBarOverlay="false"
 		  android:layout_width="match_parent"
 		  android:layout_height="match_parent"
+          android:layout_alignParentTop="true"
 		  class="com.google.android.gms.maps.SupportMapFragment">
-	</fragment> 
-				
+	</fragment>
+
+    <TextView
+            style="@style/help"
+            android:id="@+id/help"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:text="@string/markerHelp"
+            android:visibility="invisible"
+            >
+
+    </TextView>
 </RelativeLayout>

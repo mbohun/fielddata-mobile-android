@@ -126,5 +126,11 @@
     <style name="DateSpinner" parent="@android:style/Widget.Spinner">
         <item name="android:paddingBottom">5dp</item>
     </style>
+
+    <style name="help">
+        <item name="android:background">@color/helpYellow</item>
+        <item name="android:padding">5dp</item>
+
+    </style>
     
 </resources>

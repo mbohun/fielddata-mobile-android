@@ -11,11 +11,15 @@ import android.location.LocationManager;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewPropertyAnimator;
+import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
@@ -114,6 +118,8 @@ public class PointLocationSelectionActivity extends SherlockFragmentActivity imp
 
 
     private LatLng setLocation(Location location) {
+        map.clear();
+
         selectedLocation = location;
         LatLng selectedLatLng = new LatLng(selectedLocation.getLatitude(), selectedLocation.getLongitude());
         addMarker(selectedLatLng, BitmapDescriptorFactory.HUE_RED);
@@ -125,25 +131,25 @@ public class PointLocationSelectionActivity extends SherlockFragmentActivity imp
 	 * and centre.
 	 */
 	private void initialiseMap(boolean setZoom) {
-		
+
+        MapDefaults mapDefaults = getIntent().getParcelableExtra(
+                MAP_DEFAULTS_BUNDLE_KEY);
 		if (this.map == null) {
 			SupportMapFragment mf = ((SupportMapFragment) getSupportFragmentManager()
 					.findFragmentById(R.id.map));
 			// Check if we were successful in obtaining the map.
 			if (mf != null) {
 				mf.setRetainInstance(true);
-				
+
 				this.map = mf.getMap();
 				this.map.setMyLocationEnabled(true);
-				this.map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+				this.map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 				this.map.setOnMarkerDragListener(this);
-				
+
 			}
 		}
 		
 		if (selectedLocation != null) {
-
-            map.clear();
 
             final LatLngBounds.Builder builder = new LatLngBounds.Builder();
             builder.include(setLocation(selectedLocation));
@@ -158,8 +164,7 @@ public class PointLocationSelectionActivity extends SherlockFragmentActivity imp
 			
 		} else {
             if (setZoom) {
-				MapDefaults mapDefaults = getIntent().getParcelableExtra(
-						MAP_DEFAULTS_BUNDLE_KEY);
+
 				if (mapDefaults != null && mapDefaults.center != null) {
 					
 					LatLng latlng = new LatLng(mapDefaults.center.y, mapDefaults.center.x);
@@ -197,17 +202,67 @@ public class PointLocationSelectionActivity extends SherlockFragmentActivity imp
 		map.setOnMapLongClickListener(new OnMapLongClickListener() {
 			
 			public void onMapLongClick(LatLng location) {
-				
 				setLocation(locationFromClick(location));
+                hideHelp();
 			}
 
 			
 		});
-		
+
+        this.map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                showHelp();
+            }
+        });
 
 	}
 
-	private Location locationFromClick(LatLng arg0) {
+    @TargetApi(12)
+    private void showHelp() {
+        View help = findViewById(R.id.help);
+        if (help.getVisibility() != View.VISIBLE) {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+                help.setY(-help.getHeight());
+                help.setVisibility(View.VISIBLE);
+
+                help.animate().y(0);
+            }
+            else {
+                help.setVisibility(View.VISIBLE);
+            }
+            help.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    hideHelp();
+                }
+            });
+        }
+    }
+
+    @TargetApi(12)
+    private void hideHelp() {
+
+        View help = findViewById(R.id.help);
+        if (help.getVisibility() == View.VISIBLE) {
+
+            // Note we don't set the visibility back to GONE as we only want to show the
+            // help once and this saves us having to store state.
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+                help.animate().y(-help.getHeight());
+            }
+            else {
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)help.getLayoutParams();
+
+                params.height = 0;
+                help.setLayoutParams(params);
+            }
+        }
+    }
+
+
+    private Location locationFromClick(LatLng arg0) {
 		Location selectedLocation = new Location("On-screen map");
 		selectedLocation.setTime(System.currentTimeMillis());
 		selectedLocation.setLatitude(arg0.latitude);

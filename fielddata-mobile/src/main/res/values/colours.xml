@@ -9,7 +9,7 @@
     <color name="headerLabelBackgroundStart">#19496f</color>
     <color name="headerLabelBackgroundEnd">#8dd1fe</color>
     <color name="headerLabelBackgroundContrast">#FD9443</color>
-   
+    <color name="helpYellow">#FFFFCC</color>
     
     <integer name="gradientAngle">270</integer>
     

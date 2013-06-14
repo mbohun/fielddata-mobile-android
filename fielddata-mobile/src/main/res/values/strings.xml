@@ -81,6 +81,7 @@
     <string name="mapLabel">Map</string>
     <string name="locationSelectedByGPS">Location set using GPS</string>
     <string name="mapHelp">Change the selected location by dragging the marker</string>
+    <string name="markerHelp">Long press the map to add or move the marker to another location.  Use the marker icon in the action bar to select your current location.</string>
 
     <!-- Login page -->
     <string name="title_activity_login">Login</string>
