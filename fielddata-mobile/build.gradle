@@ -65,6 +65,11 @@ android {
             versionCode 3
             versionName "1.1"
         }
+        wbiocont {
+            packageName "au.org.ala.fielddata.mobile.wbiocont"
+            versionCode 1
+            versionName "0.1"
+        }
     }
 
     buildTypes {
