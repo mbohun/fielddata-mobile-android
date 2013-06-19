@@ -6,4 +6,5 @@
     <string-array name="portal_names">
         <item>National Parks Association of NSW</item>
     </string-array>
+    <bool name="use_hr_as_page_break">false</bool>
 </resources>
