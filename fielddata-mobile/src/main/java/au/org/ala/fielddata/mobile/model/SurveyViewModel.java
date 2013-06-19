@@ -55,6 +55,8 @@ public class SurveyViewModel {
 	
 	private Attribute pointSourceAttribute;
 
+    private boolean usePages;
+
 	
 	/**
 	 * Compares two Attributes by their weight. Not null safe!
@@ -85,7 +87,7 @@ public class SurveyViewModel {
 		}
 	}
 
-	public SurveyViewModel(Survey survey, Record record, PackageManager packageManager) {
+	public SurveyViewModel(Survey survey, Record record, PackageManager packageManager, boolean useHrAsPageBreak) {
 		this.survey = survey;
 		this.record = record;
 		this.packageManager = packageManager;
@@ -93,8 +95,7 @@ public class SurveyViewModel {
 		listeners = new SparseArray<AttributeChangeListener>();
 		validationStatus = new SparseArray<ValidationResult>();
 		validator = new RecordValidator();
-		
-		
+        usePages = useHrAsPageBreak;
 		sortAttributes();
 	}
 
@@ -223,7 +224,8 @@ public class SurveyViewModel {
 				
 				filteredAttributes.add(attribute);
 			}
-			if (attribute.getType() == AttributeType.HTML_HORIZONTAL_RULE) {
+
+			if (usePages && attribute.getType() == AttributeType.HTML_HORIZONTAL_RULE) {
 				if (filteredAttributes.size() > 0) {
 					attributes.add(filteredAttributes);
 					filteredAttributes = new ArrayList<Attribute>(allAttributes.size());
@@ -260,6 +262,8 @@ public class SurveyViewModel {
 			// check if there were any defined for the survey or user.
 		case ACCURACY:
 			return false; // Accuracy is recorded as a part of the POINT property.
+        case TIME:
+            return false;  // Time is automatically recorded but we don't yet allow it's explicit selection.
 		}
 		return true;
 	}
@@ -325,7 +329,8 @@ public class SurveyViewModel {
 	 * This value needs to be persisted in the event the CollectSurveyData
 	 * activity is killed while the camera activity is in the foreground. 
 	 *
-	 * @param fileUri the URI that will hold our photo.
+	 * @param attribute the target attribute for the temp value.
+     * @param value the value to store temporarily.
 	 */
 	public void setTempValue(Attribute attribute, String value) {
 		tempValue = new TempValue(attribute, value);
@@ -353,10 +358,12 @@ public class SurveyViewModel {
 		return record.getLocation();
 	}
 	
-	public void setWayPoints(WayPoints wayPoints) {
-		// Gotta do me some magic here.
-		String location = wayPoints.verticiesToWKT();
-		List<WayPoint> photopointList = wayPoints.getPhotoPoints();
-	}
+//	public void setWayPoints(WayPoints wayPoints) {
+//		// Gotta do me some magic here.
+//		String location = wayPoints.verticiesToWKT();
+//		List<WayPoint> photopointList = wayPoints.getPhotoPoints();
+//        PhotopointMapper mapper = new PhotopointMapper(survey);
+//        mapper.map(record, photopointList.get(0), survey.getAttribute(wayPoints.getPhotoPointAttribute()));
+//	}
 
 }

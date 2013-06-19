@@ -112,7 +112,10 @@ public class ViewSavedRecordsActivity extends SherlockListFragment implements Ac
 	}
 
 	public void reload() {
-        new GetRecordsTask(getActivity().getApplicationContext()).execute();
+        // This can be called before the Activity is attached.
+        if (getActivity() != null) {
+            new GetRecordsTask(getActivity().getApplicationContext()).execute();
+        }
     }
 
 	@Override

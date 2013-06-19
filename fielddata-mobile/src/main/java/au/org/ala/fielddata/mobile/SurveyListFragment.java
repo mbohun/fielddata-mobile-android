@@ -18,7 +18,6 @@ import au.org.ala.fielddata.mobile.pref.Preferences;
 import au.org.ala.fielddata.mobile.service.FieldDataServiceClient;
 
 import com.actionbarsherlock.app.SherlockListFragment;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 /**
  * Fragment that displays a list of Surveys that are available for use
@@ -39,7 +38,9 @@ public class SurveyListFragment extends SherlockListFragment implements Reloadab
 
     @Override
     public void reload() {
-        new InitDataTask().execute();
+        if (getActivity() != null) {
+            new InitDataTask().execute();
+        }
     }
 
 	private void updateSurveyList(List<Survey> surveys) {

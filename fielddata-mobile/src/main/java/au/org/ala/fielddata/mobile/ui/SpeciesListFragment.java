@@ -64,8 +64,10 @@ public class SpeciesListFragment extends SherlockListFragment implements LoaderC
     }
 
     public void reload() {
-        LoaderManager manager = getActivity().getSupportLoaderManager();
-        manager.restartLoader(0, null, this);
+        if (getActivity() != null) {
+            LoaderManager manager = getActivity().getSupportLoaderManager();
+            manager.restartLoader(0, null, this);
+        }
     }
     
     @Override
@@ -79,11 +81,11 @@ public class SpeciesListFragment extends SherlockListFragment implements LoaderC
 	}
 
 	public void onLoadFinished(Loader<Cursor> arg0, Cursor cursor) {
-		((CursorAdapter)getListAdapter()).swapCursor(cursor);
+        ((CursorAdapter)getListAdapter()).swapCursor(cursor);
 	}
 
 	public void onLoaderReset(Loader<Cursor> arg0) {
-		((CursorAdapter)getListAdapter()).swapCursor(null);
+        ((CursorAdapter)getListAdapter()).swapCursor(null);
 		
 	}
     
