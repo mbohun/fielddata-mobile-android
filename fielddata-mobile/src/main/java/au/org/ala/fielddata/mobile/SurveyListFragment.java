@@ -24,7 +24,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
  * Fragment that displays a list of Surveys that are available for use
  * by the application.
  */
-public class SurveyListFragment extends SherlockListFragment {
+public class SurveyListFragment extends SherlockListFragment implements Reloadable {
 	
 	private Preferences preferences;
 	private FieldDataServiceClient fieldDataClient;
@@ -34,8 +34,13 @@ public class SurveyListFragment extends SherlockListFragment {
 		super.onResume();
 		preferences = new Preferences(getActivity());
 		fieldDataClient = new FieldDataServiceClient(getActivity());
-		new InitDataTask().execute();
+		reload();
 	}
+
+    @Override
+    public void reload() {
+        new InitDataTask().execute();
+    }
 
 	private void updateSurveyList(List<Survey> surveys) {
 		final Survey[] surveyArray = surveys

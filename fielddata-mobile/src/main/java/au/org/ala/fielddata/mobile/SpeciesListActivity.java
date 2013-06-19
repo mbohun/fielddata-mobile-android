@@ -17,17 +17,24 @@ package au.org.ala.fielddata.mobile;
 import java.util.List;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SearchViewCompat;
 import android.support.v4.widget.SearchViewCompat.OnQueryTextListenerCompat;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import au.org.ala.fielddata.mobile.dao.SurveyDAO;
 import au.org.ala.fielddata.mobile.model.Species;
 import au.org.ala.fielddata.mobile.model.Survey;
 import au.org.ala.fielddata.mobile.nrmplus.R;
+import au.org.ala.fielddata.mobile.service.SurveyDownloadService;
 import au.org.ala.fielddata.mobile.ui.SpeciesListFragment;
 import au.org.ala.fielddata.mobile.ui.SpeciesSelectionListener;
 
@@ -39,6 +46,7 @@ import com.actionbarsherlock.view.MenuItem;
  * Presents a list of species to the user for information purposes.
  */
 public class SpeciesListActivity extends SpeciesListFragment implements SpeciesSelectionListener {
+
 
 	class OnQueryTextListener extends OnQueryTextListenerCompat {
 
@@ -64,8 +72,13 @@ public class SpeciesListActivity extends SpeciesListFragment implements SpeciesS
 	@Override
 	public void onResume() {
 		super.onResume();
-		
-	}
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
 	
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {

@@ -25,6 +25,8 @@ import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.ResourceCursorAdapter;
 import android.view.View;
 import android.widget.ListView;
+
+import au.org.ala.fielddata.mobile.Reloadable;
 import au.org.ala.fielddata.mobile.dao.SpeciesDAO;
 import au.org.ala.fielddata.mobile.model.Species;
 import au.org.ala.fielddata.mobile.nrmplus.R;
@@ -32,7 +34,7 @@ import au.org.ala.fielddata.mobile.nrmplus.R;
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.commonsware.cwac.loaderex.acl.AbstractCursorLoader;
 
-public class SpeciesListFragment extends SherlockListFragment implements LoaderCallbacks<Cursor> {
+public class SpeciesListFragment extends SherlockListFragment implements LoaderCallbacks<Cursor>, Reloadable {
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,7 +63,7 @@ public class SpeciesListFragment extends SherlockListFragment implements LoaderC
     	}
     }
 
-    public void refreshSpeciesList() {
+    public void reload() {
         LoaderManager manager = getActivity().getSupportLoaderManager();
         manager.restartLoader(0, null, this);
     }
@@ -116,7 +118,7 @@ public class SpeciesListFragment extends SherlockListFragment implements LoaderC
 				row.setTag(viewHolder);
 			}
 
-            String previousGroup = "All Species";
+            String previousGroup = null;
             int position = cursor.getPosition();
             if (position > 0) {
                 cursor.moveToPrevious();

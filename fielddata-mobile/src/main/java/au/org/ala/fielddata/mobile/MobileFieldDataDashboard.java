@@ -14,7 +14,11 @@
  ******************************************************************************/
 package au.org.ala.fielddata.mobile;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
@@ -40,6 +44,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 import au.org.ala.fielddata.mobile.dao.GenericDAO;
@@ -73,8 +78,9 @@ public class MobileFieldDataDashboard extends SherlockFragmentActivity implement
 	public static final int RECORDS_TAB_INDEX = 2;
 	
 	private static final String GPS_QUESTION_BUNDLE_KEY = "gps";
-	
-	@TargetApi(11)
+    private static final String REDIRECTED_TO_LOGIN_BUNDLE_KEY = "loginRedirect";
+
+    @TargetApi(11)
 	static public <T> void executeAsyncTask(AsyncTask<T, ?, ?> task, T... params) {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
@@ -89,6 +95,8 @@ public class MobileFieldDataDashboard extends SherlockFragmentActivity implement
 	private TextView status;
 	private ViewPager viewPager;
     private BroadcastReceiver broadcastReceiver;
+    private boolean redirectedToLogin;
+
 
 
     /**
@@ -101,6 +109,7 @@ public class MobileFieldDataDashboard extends SherlockFragmentActivity implement
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+
         // Only show the splash screen on startup, and if the variant has been configured to do so.
         if (savedInstanceState == null && getResources().getBoolean(R.bool.show_splash_screen)) {
 
@@ -109,7 +118,10 @@ public class MobileFieldDataDashboard extends SherlockFragmentActivity implement
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
 		setContentView(R.layout.activity_mobile_data_dashboard);
-		preferences = new Preferences(this);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
+        getSupportActionBar().setLogo(R.drawable.ic_launcher);
+
+        preferences = new Preferences(this);
 		PreferenceManager.setDefaultValues(getApplicationContext(), R.xml.preference1, true);
 		PreferenceManager
 				.setDefaultValues(getApplicationContext(), R.xml.network_preferences, true);
@@ -126,6 +138,7 @@ public class MobileFieldDataDashboard extends SherlockFragmentActivity implement
 		int selectedTabIndex = 0;
 		if (savedInstanceState != null) {
 			askedAboutGPS = savedInstanceState.getBoolean(GPS_QUESTION_BUNDLE_KEY);
+            redirectedToLogin = savedInstanceState.getBoolean(REDIRECTED_TO_LOGIN_BUNDLE_KEY);
 			selectedTabIndex = savedInstanceState.getInt(SELECTED_TAB_BUNDLE_KEY, 0);
 		}
 		selectedTabIndex = getIntent().getIntExtra(SELECTED_TAB_BUNDLE_KEY, selectedTabIndex);
@@ -177,17 +190,19 @@ public class MobileFieldDataDashboard extends SherlockFragmentActivity implement
 	public static class TabsAdapter extends FragmentPagerAdapter implements ActionBar.TabListener,
 			ViewPager.OnPageChangeListener {
 
-		private String[] tabClasses = { SurveyListFragment.class.getName(),
+        private String[] tabClasses = { SurveyListFragment.class.getName(),
 				SpeciesListActivity.class.getName(), ViewSavedRecordsActivity.class.getName() };
+        private boolean[] needsReload = new boolean[tabClasses.length];
 
 		private SherlockFragmentActivity ctx;
 		private ViewPager viewPager;
+        private Fragment current;
 
 		public TabsAdapter(SherlockFragmentActivity ctx, ViewPager viewPager) {
 			super(ctx.getSupportFragmentManager());
 			this.ctx = ctx;
 			this.viewPager = viewPager;
-
+            Arrays.fill(needsReload, false);
 			viewPager.setOnPageChangeListener(this);
 		}
 
@@ -206,7 +221,29 @@ public class MobileFieldDataDashboard extends SherlockFragmentActivity implement
 		@Override
 		public Fragment getItem(int arg0) {
 			return Fragment.instantiate(ctx, tabClasses[arg0]);
-		}
+    	}
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            Object f = super.instantiateItem(container, position);
+            current = (Fragment)f;
+            if (needsReload[position]) {
+                reload(current, position);
+            }
+            return f;
+        }
+
+        public void reload() {
+            Arrays.fill(needsReload, true);
+            reload(current, viewPager.getCurrentItem());
+        }
+
+        private void reload(Fragment f, int position) {
+            if (f instanceof Reloadable) {
+                ((Reloadable)current).reload();
+                needsReload[position] = false;
+            }
+        }
 
 		@Override
 		public int getCount() {
@@ -220,6 +257,7 @@ public class MobileFieldDataDashboard extends SherlockFragmentActivity implement
 		}
 
 		public void onPageSelected(int arg0) {
+
 			ctx.getSupportActionBar().setSelectedNavigationItem(arg0);
 
 		}
@@ -375,6 +413,13 @@ public class MobileFieldDataDashboard extends SherlockFragmentActivity implement
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		prefs.registerOnSharedPreferenceChangeListener(this);
         refreshPage();
+        // If the user has changed their login, we need to reload surveys/species from
+        // the database.
+        if (redirectedToLogin) {
+            redirectedToLogin = false;
+            reloadTabs();
+
+        }
 	}
 
 	@Override
@@ -399,6 +444,7 @@ public class MobileFieldDataDashboard extends SherlockFragmentActivity implement
 		super.onSaveInstanceState(outState);
 		outState.putInt(SELECTED_TAB_BUNDLE_KEY, getSupportActionBar().getSelectedNavigationIndex());
 		outState.putBoolean(GPS_QUESTION_BUNDLE_KEY, askedAboutGPS);
+        outState.putBoolean(REDIRECTED_TO_LOGIN_BUNDLE_KEY, redirectedToLogin);
 	}
 
 	private void refreshPage() {
@@ -465,6 +511,7 @@ public class MobileFieldDataDashboard extends SherlockFragmentActivity implement
 
 	private void redirectToLogin() {
 
+        redirectedToLogin = true;
 		Intent intent = new Intent(this, LoginActivity.class);
 		startActivity(intent);
 
@@ -539,7 +586,13 @@ public class MobileFieldDataDashboard extends SherlockFragmentActivity implement
 					new Preferences(this).getCurrentSurvey());
 			startActivity(intent);
 		}
-		return new MenuHelper(this).handleMenuItemSelection(item);
+        else if (item.getItemId() == R.id.login_screen) {
+            redirectToLogin();
+        }
+        else {
+		    return new MenuHelper(this).handleMenuItemSelection(item);
+        }
+        return true;
 	}
 
     private void listenForSurveyDownload() {
@@ -553,7 +606,7 @@ public class MobileFieldDataDashboard extends SherlockFragmentActivity implement
                 else {
                     Toast.makeText(MobileFieldDataDashboard.this, "Refresh failed - please check your network", Toast.LENGTH_LONG).show();
                 }
-                viewPager.setAdapter(viewPager.getAdapter());
+                reloadTabs();
                 setSupportProgressBarIndeterminateVisibility(false);
                 stopListeningForSurveyDownload();
             }
@@ -573,5 +626,10 @@ public class MobileFieldDataDashboard extends SherlockFragmentActivity implement
 			preferences.setFieldDataSessionKey(null);
 		}
 	}
+
+    private void reloadTabs() {
+        ((TabsAdapter)viewPager.getAdapter()).reload();
+
+    }
 
 }

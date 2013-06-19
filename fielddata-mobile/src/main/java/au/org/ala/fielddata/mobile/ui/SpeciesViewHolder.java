@@ -62,7 +62,7 @@ public class SpeciesViewHolder {
         if (separator == null) {
             return;
         }
-        if (currentGroup == null || previousGroup == null) {
+        if (currentGroup == null) {
             separator.setVisibility(View.GONE);
             return;
         }
@@ -86,10 +86,13 @@ public class SpeciesViewHolder {
 
 
 	private void setImage(String fileName) {
-		
-		String url = new WebServiceClient(context).getServerUrl()+"/survey/download?uuid="+fileName;
-		ImageLoader.getInstance().displayImage(url, icon);
-
+		if (fileName != null && fileName.length() > 0) {
+		    String url = new WebServiceClient(context).getServerUrl()+"/survey/download?uuid="+fileName;
+		    ImageLoader.getInstance().displayImage(url, icon);
+        }
+        else {
+            icon.setImageResource(R.drawable.no_photo);
+        }
 	}
 	
 	public void setError(CharSequence error) {

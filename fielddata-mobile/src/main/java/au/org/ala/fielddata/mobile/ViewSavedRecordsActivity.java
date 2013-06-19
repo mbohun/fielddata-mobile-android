@@ -58,7 +58,7 @@ import com.actionbarsherlock.view.MenuItem;
  * Allows the user to view records that have been created but not
  * yet uploaded to the FieldData server.
  */
-public class ViewSavedRecordsActivity extends SherlockListFragment implements ActionMode.Callback, OnClickListener {
+public class ViewSavedRecordsActivity extends SherlockListFragment implements ActionMode.Callback, OnClickListener, Reloadable {
 
 	private List<Record> records;
 	private ActionMode actionMode;
@@ -78,13 +78,13 @@ public class ViewSavedRecordsActivity extends SherlockListFragment implements Ac
 	public void onResume() {
 		super.onResume();
 		
-		refresh();
+		reload();
 		
 		uploadReceiver = new BroadcastReceiver() {
 
 			@Override
 			public void onReceive(Context context, Intent intent) {
-				refresh();
+				reload();
 			}
 		};
 	
@@ -96,7 +96,8 @@ public class ViewSavedRecordsActivity extends SherlockListFragment implements Ac
 		
 		LocalBroadcastManager.getInstance(getActivity()).registerReceiver(uploadReceiver, filter);
 	}
-	
+
+
 	@Override
 	public void onPause() {
 		super.onPause();
@@ -110,7 +111,9 @@ public class ViewSavedRecordsActivity extends SherlockListFragment implements Ac
 		inflater.inflate(R.menu.saved_records_layout, menu);
 	}
 
-	
+	public void reload() {
+        new GetRecordsTask(getActivity().getApplicationContext()).execute();
+    }
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -145,10 +148,6 @@ public class ViewSavedRecordsActivity extends SherlockListFragment implements Ac
 		}
 	}
 
-	private void refresh() {
-		new GetRecordsTask(getActivity().getApplicationContext()).execute();
-	}
-	
 	class GetRecordsTask extends AsyncTask<Void, Void, List<RecordView>> {
 
 		private Context ctx;
@@ -398,7 +397,7 @@ public class ViewSavedRecordsActivity extends SherlockListFragment implements Ac
 		
 		finishActionMode();
 		
-		refresh();
+		reload();
 		
 	}
 	
