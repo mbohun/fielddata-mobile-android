@@ -11,6 +11,7 @@ import au.org.ala.fielddata.mobile.model.Species;
 import au.org.ala.fielddata.mobile.model.Survey;
 import au.org.ala.fielddata.mobile.model.SurveyViewModel;
 import au.org.ala.fielddata.mobile.model.SurveyViewModel.TempValue;
+import au.org.ala.fielddata.mobile.nrmplus.R;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
@@ -76,7 +77,7 @@ public class SurveyModelHolder extends SherlockFragment {
 			Record record = null;
 			Survey survey;
 			if (recordId > 0) {
-				record = initRecord(recordId, surveyId, updateFromDraft);
+				record = loadRecord(recordId, updateFromDraft);
 				surveyId = record.survey_id;
 
 			}
@@ -87,10 +88,11 @@ public class SurveyModelHolder extends SherlockFragment {
 			}
 
 			if (recordId <= 0) {
-				record = initRecord(recordId, surveyId, updateFromDraft);
+				record = createRecord(survey);
 			}
+            boolean useHrAsPageBreak = getResources().getBoolean(R.bool.use_hr_as_page_break);
 
-			model = new SurveyViewModel(survey, record, getActivity().getPackageManager());
+			model = new SurveyViewModel(survey, record, getActivity().getPackageManager(), useHrAsPageBreak);
 			if (record.taxon_id != null && record.taxon_id > 0) {
 				Species species = new SpeciesDAO(getActivity()).findByServerId(Species.class,
 						record.taxon_id);
@@ -106,31 +108,30 @@ public class SurveyModelHolder extends SherlockFragment {
 		return surveyDAO.findByServerId(Survey.class, surveyId);
 	}
 
-	private Record initRecord(int recordId, int surveyId, boolean draft) {
-		Record record;
-		if (recordId <= 0) {
-			record = new Record();
-			record.survey_id = surveyId;
-			record.when = System.currentTimeMillis();
+	private Record createRecord(Survey survey) {
+		Record record = new Record();
+        record.survey_id = survey.server_id;
+        record.when = System.currentTimeMillis();
 
-			SpeciesDAO speciesDao = new SpeciesDAO(getActivity());
-			if (speciesDao.count(Species.class) == 1) {
-				Species species = speciesDao.loadAll(Species.class).get(0);
-				record.taxon_id = species.server_id;
-				record.scientificName = species.scientificName;
-			}
+        if (survey.speciesIds != null && survey.speciesIds.size() == 1) {
+            SpeciesDAO speciesDao = new SpeciesDAO(getActivity());
 
-		} else {
-			RecordDAO recordDAO;
-			if (draft) {
-				recordDAO = new DraftRecordDAO(getActivity().getApplicationContext());
-			} else {
-				recordDAO = new RecordDAO(getActivity().getApplicationContext());
-			}
-			record = recordDAO.load(Record.class, recordId);
+            Species species = speciesDao.findByServerId(Species.class, survey.speciesIds.get(0));
+            record.taxon_id = species.server_id;
+            record.scientificName = species.scientificName;
+        }
 
-		}
 		return record;
 	}
+
+    private Record loadRecord(int recordId, boolean draft) {
+        RecordDAO recordDAO;
+        if (draft) {
+            recordDAO = new DraftRecordDAO(getActivity().getApplicationContext());
+        } else {
+            recordDAO = new RecordDAO(getActivity().getApplicationContext());
+        }
+        return recordDAO.load(Record.class, recordId);
+    }
 
 }
