@@ -14,6 +14,8 @@
  ******************************************************************************/
 package au.org.ala.fielddata.mobile.model;
 
+import java.util.List;
+
 public class Attribute extends SurveyProperty {
 	
 	public static enum AttributeType {
@@ -92,6 +94,10 @@ public class Attribute extends SurveyProperty {
 		public boolean isDateType() {
 			return (this == DWC_TIME || this == WHEN || this == DATE || this == TIME);
 		}
+
+        public boolean supportsNestedValues() {
+            return (this == CENSUS_METHOD_COL || this == CENSUS_METHOD_ROW);
+        }
 	}
 	
 	public static class AttributeOption {
@@ -105,7 +111,12 @@ public class Attribute extends SurveyProperty {
 	}
 	public String typeCode;
 	public AttributeOption[] options;
-	
+	public List<Attribute> nestedAttributes;
+
+    public List<Attribute> getNestedAttributes() {
+        return nestedAttributes;
+    }
+
 	public String getOptionValue(int index) {
 		return options != null && options.length > index ? options[index].value : null;
 	}
