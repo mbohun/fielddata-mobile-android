@@ -42,7 +42,10 @@ public class StorageManager {
 	 * does not have a defined profile image.
 	 */
 	public void prefetchSpeciesProfileImage(Species species) {
-		downloadService.downloadSpeciesProfileImage(species.getImageFileName());
+        String imageFile = species.getImageFileName();
+        if (imageFile != null && imageFile.length() > 0) {
+		    downloadService.downloadSpeciesProfileImage(species.getImageFileName());
+        }
 	}
 	
 	/**
