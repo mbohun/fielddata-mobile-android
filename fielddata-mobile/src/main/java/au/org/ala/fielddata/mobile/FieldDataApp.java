@@ -12,6 +12,8 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
+import au.org.ala.fielddata.mobile.nrmplus.R;
+
 /**
  * Performs application initialisation.
  */
@@ -36,6 +38,7 @@ public class FieldDataApp extends Application {
 		DisplayImageOptions options = new DisplayImageOptions.Builder().
 				cacheInMemory().
 				cacheOnDisc().
+                showStubImage(R.drawable.no_photo).
 				build();
 		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
 			.memoryCacheSize(cacheSize)
