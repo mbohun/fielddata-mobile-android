@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ALCW</string>
+    <bool name="show_splash_screen">false</bool>
+    <integer name="splash_screen_duration">4000</integer>
+    <string-array name="portal_names">
+        <item>Atlas of Life in the Coastal Wilderness</item>
+    </string-array>
+    <bool name="use_hr_as_page_break">false</bool>
+</resources>
