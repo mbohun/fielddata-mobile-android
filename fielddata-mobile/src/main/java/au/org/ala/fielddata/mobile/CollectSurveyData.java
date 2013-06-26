@@ -49,6 +49,7 @@ import android.widget.Toast;
 import au.org.ala.fielddata.mobile.dao.DraftRecordDAO;
 import au.org.ala.fielddata.mobile.dao.RecordDAO;
 import au.org.ala.fielddata.mobile.dao.SpeciesDAO;
+import au.org.ala.fielddata.mobile.map.PointLocationSelectionActivity;
 import au.org.ala.fielddata.mobile.map.WayPointActivity;
 import au.org.ala.fielddata.mobile.model.Attribute;
 import au.org.ala.fielddata.mobile.model.MapDefaults;
@@ -56,6 +57,7 @@ import au.org.ala.fielddata.mobile.model.Record;
 import au.org.ala.fielddata.mobile.model.Species;
 import au.org.ala.fielddata.mobile.model.SurveyViewModel;
 import au.org.ala.fielddata.mobile.model.SurveyViewModel.TempValue;
+import au.org.ala.fielddata.mobile.model.WayPoints;
 import au.org.ala.fielddata.mobile.nrmplus.R;
 import au.org.ala.fielddata.mobile.pref.Preferences;
 import au.org.ala.fielddata.mobile.service.LocationServiceHelper;
@@ -100,6 +102,8 @@ public class CollectSurveyData extends SherlockFragmentActivity implements
 	 */
 	public static final int SELECT_LOCATION_REQUEST = 1;
 
+    public static final int SELECT_POLYGON_LOCATION_REQUEST = 2;
+
 	/** Used to identify a request to the Camera when a result is returned */
 	public static final int TAKE_PHOTO_REQUEST = 10000;
 
@@ -130,6 +134,7 @@ public class CollectSurveyData extends SherlockFragmentActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_collect_survey_data);
+
 		buildCustomActionBar();
 		
 		if (savedInstanceState == null) {
@@ -499,29 +504,69 @@ public class CollectSurveyData extends SherlockFragmentActivity implements
 	}
 
 	public void selectLocation() {
-		Intent intent = new Intent(this, WayPointActivity.class);
-		Location location = surveyViewModel.getLocation();
-		MapDefaults defaults = surveyViewModel.getSurvey().map;
-		intent.putExtra(LocationSelectionActivity.MAP_DEFAULTS_BUNDLE_KEY, defaults);
-		if (location != null) {
-			intent.putExtra(LocationSelectionActivity.LOCATION_BUNDLE_KEY, location);
 
-		}
-		startActivityForResult(intent, CollectSurveyData.SELECT_LOCATION_REQUEST);
+        if (surveyViewModel.getSurvey().locationPolygon) {
+            selectPolygonLocation();
+        }
+        else {
+            selectPointLocation();
+        }
+
 	}
+
+    public void selectPolygonLocation() {
+
+        Intent intent = new Intent(this, WayPointActivity.class);
+        Location location = surveyViewModel.getLocation();
+        MapDefaults defaults = surveyViewModel.getSurvey().map;
+
+        Attribute photoPointAttribute = getViewModel().getSurvey().getPhotoPointAttribute();
+        if (photoPointAttribute != null) {
+            intent.putExtra(WayPointActivity.ATTRIBUTE_ID_KEY, photoPointAttribute.getServerId());
+        }
+
+        intent.putExtra(PointLocationSelectionActivity.MAP_DEFAULTS_BUNDLE_KEY, defaults);
+        if (location != null) {
+            intent.putExtra(PointLocationSelectionActivity.LOCATION_BUNDLE_KEY, location);
+        }
+
+        startActivityForResult(intent, CollectSurveyData.SELECT_POLYGON_LOCATION_REQUEST);
+    }
+
+    public void selectPointLocation() {
+        Intent intent = new Intent(this, PointLocationSelectionActivity.class);
+        Location location = surveyViewModel.getLocation();
+        MapDefaults defaults = surveyViewModel.getSurvey().map;
+
+        intent.putExtra(PointLocationSelectionActivity.MAP_DEFAULTS_BUNDLE_KEY, defaults);
+        if (location != null) {
+            intent.putExtra(PointLocationSelectionActivity.LOCATION_BUNDLE_KEY, location);
+
+        }
+        startActivityForResult(intent, CollectSurveyData.SELECT_LOCATION_REQUEST);
+    }
 
 	/**
 	 * Callback made to this activity after the camera, gallery or map activity
 	 * has finished.
 	 */
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == SELECT_LOCATION_REQUEST) {
+
+        if (requestCode == SELECT_LOCATION_REQUEST) {
 			if (resultCode == RESULT_OK) {
 				Location location = (Location) data.getExtras().get(
 						LocationSelectionActivity.LOCATION_BUNDLE_KEY);
 				surveyViewModel.setLocation(location);
 			}
-		} else if (requestCode == TAKE_PHOTO_REQUEST) {
+		} else if (requestCode == SELECT_POLYGON_LOCATION_REQUEST) {
+            if (resultCode == RESULT_OK) {
+
+                WayPoints result = (WayPoints)data.getExtras().get(WayPointActivity.WAY_POINTS_KEY);
+                result.setPhotoPointAttribute(data.getIntExtra(WayPointActivity.ATTRIBUTE_ID_KEY, -1));
+                surveyViewModel.setWayPoints(result);
+            }
+        }
+        else if (requestCode == TAKE_PHOTO_REQUEST) {
 			if (resultCode == RESULT_OK) {
 				surveyViewModel.persistTempValue();
 			} else {

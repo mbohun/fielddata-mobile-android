@@ -263,6 +263,7 @@ public class SurveyViewModel {
 		case ACCURACY:
 			return false; // Accuracy is recorded as a part of the POINT property.
         case TIME:
+        case DWC_TIME:
             return false;  // Time is automatically recorded but we don't yet allow it's explicit selection.
 		}
 		return true;
@@ -358,12 +359,21 @@ public class SurveyViewModel {
 		return record.getLocation();
 	}
 	
-//	public void setWayPoints(WayPoints wayPoints) {
-//		// Gotta do me some magic here.
-//		String location = wayPoints.verticiesToWKT();
-//		List<WayPoint> photopointList = wayPoints.getPhotoPoints();
-//        PhotopointMapper mapper = new PhotopointMapper(survey);
-//        mapper.map(record, photopointList.get(0), survey.getAttribute(wayPoints.getPhotoPointAttribute()));
-//	}
+	public void setWayPoints(WayPoints wayPoints) {
+		// Gotta do me some magic here.
+        Location location = wayPoints.getLocation();
+        if (location != null) {
+            setLocation(location);
+        }
+        if (wayPoints.getPhotoPointAttribute() > 0) {
+		    List<PhotoPoint> photopointList = wayPoints.getPhotoPoints();
+            PhotopointMapper mapper = new PhotopointMapper(survey);
+            mapper.map(record, photopointList, survey.getAttribute(wayPoints.getPhotoPointAttribute()));
+        }
+
+        // TODO set location....
+        //        String location = wayPoints.verticiesToWKT();
+
+    }
 
 }

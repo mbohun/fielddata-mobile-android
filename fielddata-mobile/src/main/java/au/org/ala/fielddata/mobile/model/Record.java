@@ -95,11 +95,18 @@ public class Record extends Persistent {
 		public Integer server_id;
 		public Integer attribute_id;
 		protected StringValue value;
+        protected List<AttributeValues> values;
 		
 		
 		public AttributeValue() {
 			value = new StringValue();
 		}
+
+        public AttributeValue(int attributeId) {
+            attribute_id = attributeId;
+            value = new StringValue();
+        }
+
 		/**
 		 * Intended for use when persisting to the database.
 		 */
@@ -122,7 +129,20 @@ public class Record extends Persistent {
 				value.value = uri.toString();
 			}
 		}
-		
+
+        void addNestedValues(AttributeValues attributeValues) {
+            value = null;
+            if (values == null) {
+                values = new ArrayList<AttributeValues>();
+            }
+            attributeValues.row = values.size();
+            values.add(attributeValues);
+        }
+
+        public List<AttributeValues> getNestedValues() {
+            return values;
+        }
+
 		public Uri getUri() {
 			if (!value.uri || value.value == null || "".equals(value.value)) {
 				return null;
@@ -140,6 +160,8 @@ public class Record extends Persistent {
 			}
 			return value.value;
 		}
+
+
 		
 		
 	}
@@ -260,7 +282,7 @@ public class Record extends Persistent {
 	/**
 	 * Maintains the validation state of this Record so it doesn't need
 	 * to be re-calculated when displayed in the saved records list.
-	 * @param valid whether this Record is valid or not.
+	 * @param status This Record's current validation status.
 	 */
 	public void setStatus(Status status) {
 		this.status = status;
@@ -327,7 +349,26 @@ public class Record extends Persistent {
 			attrValue.setValue(value);
 		}
 	}
-	
+
+    /**
+     * Sets the value of a census method typed attribute.
+     * @param attribute Identifies the attribute the value belongs to.
+     * @param values Nested structure containing attribute values.
+     */
+    public void setValue(Attribute attribute, AttributeValues values) {
+        values.attributeId = attribute.server_id;
+        values.recordId = this.server_id;
+
+        // Not sure yet who is responsible for the row.
+        if (attribute.getType().supportsNestedValues()) {
+            AttributeValue attrValue = valueOf(attribute);
+            attrValue.addNestedValues(values);
+        }
+        else {
+            throw new IllegalArgumentException("The attribute "+attribute+" is the wrong type to support nested values");
+        }
+    }
+
 	public void setUri(Attribute attribute, Uri value) {
 		checkUriSupport(attribute);
 		AttributeValue attrValue = valueOf(attribute);

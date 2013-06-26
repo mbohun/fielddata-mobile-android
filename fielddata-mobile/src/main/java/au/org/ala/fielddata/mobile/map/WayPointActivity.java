@@ -2,6 +2,7 @@ package au.org.ala.fielddata.mobile.map;
 
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import android.annotation.TargetApi;
@@ -21,6 +22,7 @@ import android.view.View;
 import android.widget.ImageView;
 import au.org.ala.fielddata.mobile.CollectSurveyData;
 import au.org.ala.fielddata.mobile.model.MapDefaults;
+import au.org.ala.fielddata.mobile.model.PhotoPoint;
 import au.org.ala.fielddata.mobile.model.WayPoint;
 import au.org.ala.fielddata.mobile.model.WayPoints;
 import au.org.ala.fielddata.mobile.nrmplus.R;
@@ -46,12 +48,18 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 
+/**
+ * This activity displays a google map which allows a polygon to be drawn via adding a series
+ * of WayPoints in sequential order.
+ * It also allows Photopoints to be taken during the process.
+ */
 @TargetApi(8)
 public class WayPointActivity extends SherlockFragmentActivity implements InfoWindowAdapter, OnMarkerDragListener {
 	
 	/** Bundle keys */
 	public static final String WAY_POINTS_KEY = "WAYPOINTS";
 	public static final String MAP_DEFAULTS_BUNDLE_KEY = "MapDefaults";
+    public static final String ATTRIBUTE_ID_KEY = "PhotoPointAttributeID";
 	private static final String PHOTO_URI_KEY = "PhotoURI";
 	
 	/** Used to identify a request to the Camera when a result is returned */
@@ -59,7 +67,7 @@ public class WayPointActivity extends SherlockFragmentActivity implements InfoWi
 	
 	protected GoogleMap map;
 	private WayPoints wayPoints;
-	private Polyline polyline;
+    private Polyline polyline;
 	private LocationManager locationManager;
 	private Uri photoInProgress;
 	
@@ -67,14 +75,14 @@ public class WayPointActivity extends SherlockFragmentActivity implements InfoWi
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_collect_waypoints);
-		boolean setZoom = true;
+        boolean setZoom = true;
 		if (savedInstanceState != null) {
 			setZoom = false;
-			wayPoints = (WayPoints) savedInstanceState.getParcelable(WAY_POINTS_KEY);
-			photoInProgress = (Uri)savedInstanceState.getParcelable(PHOTO_URI_KEY);
+			wayPoints = savedInstanceState.getParcelable(WAY_POINTS_KEY);
+			photoInProgress = savedInstanceState.getParcelable(PHOTO_URI_KEY);
 			
 		} else {
-			wayPoints = (WayPoints) getIntent().getParcelableExtra(WAY_POINTS_KEY);
+			wayPoints = getIntent().getParcelableExtra(WAY_POINTS_KEY);
 		}
 		locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
 		initialiseMap(setZoom);
@@ -124,7 +132,12 @@ public class WayPointActivity extends SherlockFragmentActivity implements InfoWi
 		}
 		
 		else if (item.getItemId() == R.id.done) {
-			
+
+            Intent result = getIntent();
+            result.putExtra(WAY_POINTS_KEY, wayPoints);
+            setResult(RESULT_OK, result);
+            finish();
+
 		}
 		return true;
 	}
@@ -173,9 +186,10 @@ public class WayPointActivity extends SherlockFragmentActivity implements InfoWi
 			}
 			
 		} else {
-			wayPoints = new WayPoints();
+            int photoPointAttributeId = getIntent().getIntExtra(ATTRIBUTE_ID_KEY, 0);
+			wayPoints = new WayPoints(photoPointAttributeId);
 			if (setZoom) {
-				MapDefaults mapDefaults = (MapDefaults) getIntent().getParcelableExtra(
+				MapDefaults mapDefaults = getIntent().getParcelableExtra(
 						MAP_DEFAULTS_BUNDLE_KEY);
 				if (mapDefaults != null && mapDefaults.center != null) {
 					
@@ -187,7 +201,7 @@ public class WayPointActivity extends SherlockFragmentActivity implements InfoWi
 
 	}
 	
-	private void restoreWayPoints(List<WayPoint> wayPoints, LatLngBounds.Builder bounds, float markerColour) {
+	private void restoreWayPoints(List<? extends WayPoint> wayPoints, LatLngBounds.Builder bounds, float markerColour) {
 		LatLng location;
 		for (WayPoint wayPoint : wayPoints) {
 			location = wayPoint.coordinate();
@@ -214,12 +228,12 @@ public class WayPointActivity extends SherlockFragmentActivity implements InfoWi
 		}
 		photoPointInfoView = null;
 		final Marker tmpMarker = marker;
-		WayPoint wayPoint = wayPoints.findById(marker.getId());
-		if (wayPoint.photo != null) {
+		PhotoPoint photoPoint = wayPoints.findPhotoPointById(marker.getId());
+		if (photoPoint.photo != null) {
 			photoPointInfoView = getLayoutInflater().inflate(R.layout.waypoint_photo, null);
 			photoPointInfoView.setTag(marker.getId());
 			ImageView view = (ImageView)photoPointInfoView.findViewById(R.id.photo);
-			ImageLoader.getInstance().displayImage(wayPoint.photo.toString(), view, new SimpleImageLoadingListener() {
+			ImageLoader.getInstance().displayImage(photoPoint.photo.toString(), view, new SimpleImageLoadingListener() {
 
 				@Override
 				public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
@@ -244,7 +258,7 @@ public class WayPointActivity extends SherlockFragmentActivity implements InfoWi
 		}
 		Marker marker = addMarker(new LatLng(location.getLatitude(), location.getLongitude()), BitmapDescriptorFactory.HUE_BLUE);
 		
-		WayPoint point = new WayPoint(location, marker.getId());
+		PhotoPoint point = new PhotoPoint(location, marker.getId());
 		point.photo = photoInProgress;
 		photoInProgress = null;
 		

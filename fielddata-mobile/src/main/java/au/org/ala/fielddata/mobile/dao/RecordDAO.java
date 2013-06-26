@@ -1,13 +1,17 @@
 package au.org.ala.fielddata.mobile.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.DatabaseUtils.InsertHelper;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
+
+import au.org.ala.fielddata.mobile.model.AttributeValues;
 import au.org.ala.fielddata.mobile.model.Record;
 import au.org.ala.fielddata.mobile.model.Record.AttributeValue;
 import au.org.ala.fielddata.mobile.model.Record.PropertyAttributeValue;
@@ -21,6 +25,8 @@ public class RecordDAO extends GenericDAO<Record> {
 	public static final String ATTRIBUTE_VALUE_TABLE = "ATTRIBUTE_VALUE";
 	public static final String ATTRIBUTE_ROW_TABLE = "ATTRIBUTE_ROW";
 	public static final String RECORD_TABLE = "RECORD";
+    public static final String PHOTOPOINT_TABLE = "PHOTOPOINT";
+    public static final String RECORD_ID_COLUMN_NAME = "record_id";
 	
 	
 	// Shared column indexes (select *)
@@ -98,25 +104,32 @@ public class RecordDAO extends GenericDAO<Record> {
       "server_id INTEGER, "+
       "created INTEGER, "+
       "updated INTEGER, "+
+      "attribute_id INTEGER, "+
       "row_number INTEGER, "+
       "parent_record_id INTEGER "+
-      "parent_attribute_value INTEGER)";
+      "parent_attribute_value_id INTEGER)";
+
 	
 	public static final String ATTRIBUTE_VALUE_TABLE_DDL = 
 		"CREATE TABLE "+ATTRIBUTE_VALUE_TABLE+ ATTRIBUTE_VALUE_COLUMNS;
 	
 	public static final String ATTRIBUTE_ROW_TABLE_DDL = 
 			"CREATE TABLE "+ATTRIBUTE_ROW_TABLE+ATTRIBUTE_ROW_COLUMNS;
+
+
+
 	
 	
 	protected String recordTable;
 	protected String attributeValueTable;
+    protected String attributeRowTable;
 	
 	public RecordDAO(Context ctx) {
 		super(ctx);
 		
 		recordTable = RECORD_TABLE;
 		attributeValueTable = ATTRIBUTE_VALUE_TABLE;
+        attributeRowTable = ATTRIBUTE_ROW_TABLE;
 	}
 	
 	public Integer save(Record record, SQLiteDatabase db) {
@@ -144,34 +157,59 @@ public class RecordDAO extends GenericDAO<Record> {
 			whereClause = "record_id=?";
 			db.delete(attributeValueTable, whereClause, params);
 		}
-		
-		InsertHelper insertHelper = new InsertHelper(db, attributeValueTable);
-		for (AttributeValue attrValue : record.getAttributeValues()) {
-			// PropertyAttributeValues have already been inserted as columns of the RECORD table.
-			if (!(attrValue instanceof PropertyAttributeValue)) {
-				// Don't insert values that are empty, this is to prevent problems
-				// when we upload. (e.g. numbers evaluate to NaN, URIs give a 
-				// broken image link etc.)
-				String value = attrValue.nullSafeValue();
-				if (value.length() > 0) {
-					insertHelper.prepareForInsert();
-					insertHelper.bind(CREATED_COLUMN+1, now);
-					insertHelper.bind(UPDATED_COLUMN+1, now);
-					//insertHelper.bind(SERVER_ID_COLUMN+1, attrValue.server_id);
-					insertHelper.bind(ATTRIBUTE_ID_COLUMN+1, attrValue.attribute_id);
-					insertHelper.bind(RECORD_ID_COLUMN+1, id);
-					insertHelper.bind(ATTRIBUTE_VALUE_COLUMN+1, value);
-					insertHelper.bind(TYPE_COLUMN+1, attrValue.isUri() ? TYPE_URI : TYPE_TEXT);
-			
-					long attr_value_id = insertHelper.execute();
-					attrValue.id = (int)attr_value_id;
-				}
-			}
-		}
+
+        saveAttributeValues(db, id, now, record.getAttributeValues());
 		
 		
 		return id;
 	}
+
+    private void saveAttributeValues(SQLiteDatabase db, int recordId, long now, List<AttributeValue> attributeValues) {
+        InsertHelper insertHelper = new InsertHelper(db, attributeValueTable);
+        for (AttributeValue attrValue : attributeValues) {
+            // PropertyAttributeValues have already been inserted as columns of the RECORD table.
+            if (!(attrValue instanceof PropertyAttributeValue)) {
+                // Don't insert values that are empty, this is to prevent problems
+                // when we upload. (e.g. numbers evaluate to NaN, URIs give a
+                // broken image link etc.)
+                String value = attrValue.nullSafeValue();
+                if (value.length() > 0) {
+                    insertHelper.prepareForInsert();
+                    insertHelper.bind(CREATED_COLUMN+1, now);
+                    insertHelper.bind(UPDATED_COLUMN+1, now);
+                    //insertHelper.bind(SERVER_ID_COLUMN+1, attrValue.server_id);
+                    insertHelper.bind(ATTRIBUTE_ID_COLUMN+1, attrValue.attribute_id);
+                    insertHelper.bind(RECORD_ID_COLUMN+1, recordId);
+                    insertHelper.bind(ATTRIBUTE_VALUE_COLUMN+1, value);
+                    insertHelper.bind(TYPE_COLUMN+1, attrValue.isUri() ? TYPE_URI : TYPE_TEXT);
+
+                    long attr_value_id = insertHelper.execute();
+                    attrValue.id = (int)attr_value_id;
+
+                }
+                else if (attrValue.getNestedValues() != null) {
+                    saveNestedAttributeValues(db, recordId, now, attrValue);
+                }
+            }
+        }
+    }
+
+    private void saveNestedAttributeValues(SQLiteDatabase db, int recordId, long timestamp, AttributeValue attributeValue) {
+
+        InsertHelper insertHelper = new InsertHelper(db, attributeRowTable);
+        for (AttributeValues values : attributeValue.getNestedValues()) {
+            insertHelper.prepareForInsert();
+            insertHelper.bind(3, timestamp); // CREATED
+            insertHelper.bind(4, timestamp); // UPDATED
+            insertHelper.bind(5, values.getRow()); // ROW_NUMBER
+            insertHelper.bind(6, recordId); // PARENT_RECORD_ID
+            insertHelper.bind(7, values.getAttributeId()); // PARENT_ATTRIBUTE_VALUE_ID
+            insertHelper.execute();
+
+            //saveAttributeValues(db, recordId, timestamp, values.getAttributeValues());
+        }
+
+    }
 
 	protected boolean map(Record record, long now, ContentValues values) {
 		
@@ -238,25 +276,56 @@ public class RecordDAO extends GenericDAO<Record> {
 		int status = result.getInt(STATUS_COLUMN);
 		record.setStatus(Record.Status.values()[status]);
 		record.scientificName = result.getString(SCIENTIFIC_NAME_COLUMN);
-		
-		Cursor values = db.query(false, attributeValueTable, new String[]{"_id", "attribute_id", "value", "type"}, "record_id = ?", new String[] {Integer.toString(record.getId())}, null, null, null, null);
-		try {
-			values.moveToFirst();
-			List<AttributeValue> attrValues = record.getAttributeValues();
-			while (!values.isAfterLast()) {
-				
-				AttributeValue value = new AttributeValue(values.getInt(1), values.getString(2), values.getInt(3) == TYPE_URI);
-				attrValues.add(value);
-				values.moveToNext();
-			}
-		}
-		finally {
-			values.close();
-		}
+
+        List<AttributeValue> attributeValueList = queryAttributeValues(db, record);
+        //List<AttributeValues> attributeValuesList = queryNestedAttributeValue(db, record);
+
+
+        record.getAttributeValues().addAll(attributeValueList);
 		return record;
 	}
-	
-	public void deleteAll(Class<Record> recordClass) {
+
+    private List<AttributeValue> queryAttributeValues(SQLiteDatabase db, Record record) {
+        List<AttributeValue> attrValues = new ArrayList<AttributeValue>();
+
+        Cursor values = db.query(false, attributeValueTable, new String[]{"_id", "attribute_id", "value", "type", "row_id"}, RECORD_ID_COLUMN_NAME+" = ?", new String[] {Integer.toString(record.getId())}, null, null, null, null);
+        try {
+            values.moveToFirst();
+            while (!values.isAfterLast()) {
+
+                AttributeValue value = new AttributeValue(values.getInt(1), values.getString(2), values.getInt(3) == TYPE_URI);
+                attrValues.add(value);
+                values.moveToNext();
+            }
+
+        }
+        finally {
+            values.close();
+        }
+        return attrValues;
+    }
+
+    private List<AttributeValues> queryNestedAttributeValue(SQLiteDatabase db, Record record) {
+        List<AttributeValues> attrValuesList = new ArrayList<AttributeValues>();
+
+        Cursor values = db.query(false, attributeRowTable, new String[]{"_id", "attribute_id", "row_number", "parent_attribute_value_id"}, RECORD_ID_COLUMN_NAME+" = ?", new String[] {Integer.toString(record.getId())}, null, null, null, null);
+        try {
+            values.moveToFirst();
+            while (!values.isAfterLast()) {
+
+                AttributeValues attrValues = new AttributeValues(values.getInt(1), record, values.getInt(2));
+                attrValuesList.add(attrValues);
+                values.moveToNext();
+            }
+
+        }
+        finally {
+            values.close();
+        }
+        return attrValuesList;
+    }
+
+    public void deleteAll(Class<Record> recordClass) {
 		synchronized(helper) {
 		SQLiteDatabase db = helper.getWritableDatabase();
 		

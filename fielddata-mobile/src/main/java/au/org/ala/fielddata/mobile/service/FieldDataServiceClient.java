@@ -169,7 +169,7 @@ public class FieldDataServiceClient extends WebServiceClient {
 		survey.speciesIds = surveyResponse.details.speciesIds;
 		survey.imageUrl = surveyResponse.imageUrl;
         survey.locationPolygon = surveyResponse.locationPolygon;
-        survey.photoPointAttribute = surveyResponse.photoPointAttribute;
+        //survey.photoPointAttribute = surveyResponse.photoPointAttribute;
 
 		return survey;
 	}

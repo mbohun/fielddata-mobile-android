@@ -71,6 +71,7 @@ public class PointLocationSelectionActivity extends SherlockFragmentActivity imp
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_collect_waypoints);
+
 		boolean setZoom = true;
 		if (savedInstanceState != null) {
 			setZoom = false;
@@ -82,7 +83,7 @@ public class PointLocationSelectionActivity extends SherlockFragmentActivity imp
         locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
 		initialiseMap(setZoom);
 		addEventHandlers();
-
+        initHelp();
 	}
 	
 	
@@ -218,9 +219,22 @@ public class PointLocationSelectionActivity extends SherlockFragmentActivity imp
 
 	}
 
+    private void initHelp() {
+        final View help = findViewById(R.id.help);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+            help.setVisibility(View.INVISIBLE);
+        }
+        help.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                hideHelp();
+            }
+        });
+    }
+
     @TargetApi(12)
     private void showHelp() {
-        View help = findViewById(R.id.help);
+        final View help = findViewById(R.id.help);
         if (help.getVisibility() != View.VISIBLE) {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
@@ -232,12 +246,7 @@ public class PointLocationSelectionActivity extends SherlockFragmentActivity imp
             else {
                 help.setVisibility(View.VISIBLE);
             }
-            help.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    hideHelp();
-                }
-            });
+
         }
     }
 

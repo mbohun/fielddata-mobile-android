@@ -4,8 +4,7 @@
     <bool name="show_splash_screen">false</bool>
     <integer name="splash_screen_duration">4000</integer>
     <string-array name="portal_names">
-        <item>National Parks Association of NSW</item>
-        <item>Million Trees</item>
+        <item>Mobile Test</item>
     </string-array>
     <bool name="use_hr_as_page_break">false</bool>
 </resources>

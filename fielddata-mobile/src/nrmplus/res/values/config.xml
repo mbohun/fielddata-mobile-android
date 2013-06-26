@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">NPA NSW</string>
+    <string name="app_name">NRM Plus</string>
     <bool name="show_splash_screen">false</bool>
-    <integer name="splash_screen_duration">0</integer>
+    <integer name="splash_screen_duration">4000</integer>
     <string-array name="portal_names">
         <item>Condamine Alliance</item>
-        <item>National Parks Association of NSW</item>
     </string-array>
     <bool name="use_hr_as_page_break">false</bool>
 </resources>

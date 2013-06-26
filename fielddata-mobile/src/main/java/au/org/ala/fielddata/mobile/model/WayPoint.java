@@ -9,27 +9,25 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class WayPoint implements Parcelable {
 	public Location location;
-	public Uri photo;
+
 	public String markerId;
 	
 	
 	public WayPoint(Location location, String markerId) {
-		this.location = location;
-		this.markerId = markerId;
-		
-	}
-	public WayPoint(Parcel in) {
-		location = in.readParcelable(WayPoint.class.getClassLoader());
-		photo = in.readParcelable(WayPoint.class.getClassLoader());
-		markerId = in.readString();
-	}
+        this.location = location;
+        this.markerId = markerId;
+
+    }
+    public WayPoint(Parcel in) {
+        location = in.readParcelable(WayPoint.class.getClassLoader());
+        markerId = in.readString();
+    }
 	
 	public int describeContents() {
 		return 0;
 	}
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeParcelable(location, 0);
-		dest.writeParcelable(photo, 0);
 		dest.writeString(markerId);
 	}
 	public LatLng coordinate() {

@@ -14,6 +14,7 @@
  ******************************************************************************/
 package au.org.ala.fielddata.mobile.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Attribute extends SurveyProperty {
@@ -113,8 +114,26 @@ public class Attribute extends SurveyProperty {
 	public AttributeOption[] options;
 	public List<Attribute> nestedAttributes;
 
+    /** Default constructor used by the JSON serialization / de-serialization process */
+    public Attribute() {}
+
+    public Attribute(Integer server_id, AttributeType type, String name) {
+        this.server_id = server_id;
+        this.name = name;
+        setType(type);
+
+    }
+
     public List<Attribute> getNestedAttributes() {
         return nestedAttributes;
+    }
+
+    public void addNestedAttribute(Integer id, AttributeType type, String name) {
+        if (nestedAttributes == null) {
+            nestedAttributes = new ArrayList<Attribute>();
+        }
+        nestedAttributes.add(new Attribute(id, type, name));
+
     }
 
 	public String getOptionValue(int index) {

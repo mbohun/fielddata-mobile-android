@@ -3,6 +3,7 @@ package au.org.ala.fielddata.mobile.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -10,26 +11,33 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class WayPoints implements Parcelable {
 	
-	private List<WayPoint> photoPoints;
+	private List<PhotoPoint> photoPoints;
 	private List<WayPoint> verticies;
 	private boolean polygonClosed;
+    private int photoPointAttribute;
 	
-	public WayPoints() {
-		photoPoints = new ArrayList<WayPoint>();
+	public WayPoints(int photoPointAttribute) {
+		photoPoints = new ArrayList<PhotoPoint>();
 		verticies = new ArrayList<WayPoint>();
 		polygonClosed = false;
+        this.photoPointAttribute = photoPointAttribute;
 	}
 	
 	public WayPoints(Parcel in) {
-		photoPoints = new ArrayList<WayPoint>();
-		in.readTypedList(photoPoints, WayPoint.CREATOR);
+		photoPoints = new ArrayList<PhotoPoint>();
+		in.readTypedList(photoPoints, PhotoPoint.CREATOR);
 		verticies = new ArrayList<WayPoint>();
 		in.readTypedList(verticies, WayPoint.CREATOR);
 		boolean[] wrapper = new boolean[1];
 		in.readBooleanArray(wrapper);
 		polygonClosed = wrapper[0];
+        photoPointAttribute = in.readInt();
 		
 	}
+
+    public void setPhotoPointAttribute(int photoPointAttribute) {
+        this.photoPointAttribute = photoPointAttribute;
+    }
 	
 	public String verticiesToWKT() {
 		if (verticies.size() == 0) {
@@ -67,11 +75,16 @@ public class WayPoints implements Parcelable {
 	public void setClosed(boolean close) {
 		polygonClosed = close;
 	}
+
+    public int getPhotoPointAttribute() {
+        return photoPointAttribute;
+    }
 	
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeTypedList(photoPoints);
 		dest.writeTypedList(verticies);
 		dest.writeBooleanArray(new boolean[]{polygonClosed});
+        dest.writeInt(photoPointAttribute);
 	}
 	public int describeContents() {
 		return 0;
@@ -95,7 +108,7 @@ public class WayPoints implements Parcelable {
 		return verticies;
 	}
 	
-	public List<WayPoint> getPhotoPoints() {
+	public List<PhotoPoint> getPhotoPoints() {
 		return photoPoints;
 	}
 	
@@ -105,19 +118,24 @@ public class WayPoints implements Parcelable {
 				return wayPoint;
 			}
 		}
-		for (WayPoint wayPoint : photoPoints) {
-			if (markerId.equals(wayPoint.markerId)) {
-				return wayPoint;
-			}
-		}
+
 		return null;
 	}
+
+    public PhotoPoint findPhotoPointById(String markerId) {
+        for (PhotoPoint wayPoint : photoPoints) {
+            if (markerId.equals(wayPoint.markerId)) {
+                return wayPoint;
+            }
+        }
+        return null;
+    }
 	
 	public void addVertex(WayPoint vertex) {
 		verticies.add(vertex);
 	}
 	
-	public void addPhotoPoint(WayPoint photoPoint) {
+	public void addPhotoPoint(PhotoPoint photoPoint) {
 		photoPoints.add(photoPoint);
 	}
 	public static final Parcelable.Creator<WayPoints> CREATOR = new Parcelable.Creator<WayPoints>() {
@@ -128,5 +146,12 @@ public class WayPoints implements Parcelable {
 			return new WayPoints[size];
 		}
 	};
-	
+
+    public Location getLocation() {
+        // TODO fix me
+        if (verticies != null && verticies.size() > 0) {
+            return verticies.get(0).location;
+        }
+        return null;
+    }
 }

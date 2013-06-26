@@ -14,6 +14,8 @@
  ******************************************************************************/
 package au.org.ala.fielddata.mobile.model;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,13 +33,12 @@ public class Survey extends Persistent {
 		public String name;
 		public String description;
 	}
-	
-	public String name;
+
+    public String name;
 	public String description;
 	public MapDefaults map;
-    public boolean locationPolygon = false;
-    public int photoPointAttribute = -1;
-	
+    public boolean locationPolygon = true;
+
 	@SerializedName("attributesAndOptions")
 	public List<Attribute> attributes;
 	public List<RecordProperty> recordProperties;
@@ -47,7 +48,16 @@ public class Survey extends Persistent {
 	public SurveyDetails details;
 	
 	public String imageUrl;
-	
+
+    public Attribute getPhotoPointAttribute() {
+        for (Attribute attribute : attributes) {
+            if (attribute.name.equalsIgnoreCase("photopoints")) {
+                return attribute;
+            }
+        }
+        return null;
+    }
+
 	public boolean hasSpecies() {
 		return propertyByType(AttributeType.SPECIES_P) != null;
 	}
@@ -89,13 +99,25 @@ public class Survey extends Persistent {
 	}
 	
 	public Attribute getAttribute(int id) {
-		for (Attribute attribute : attributes) {
-			if (id == attribute.server_id) {
-				return attribute;
-			}
-		}
-		return null;
+		return findAttribute(id, attributes);
 	}
+
+    private Attribute findAttribute(int id, List<Attribute> attributes) {
+
+        Log.i("Survey", "Finding attribute: " + id+ " in " + attributes);
+        for (Attribute attribute : attributes) {
+            if (attribute.server_id == id) {
+                return attribute;
+            }
+            else if (attribute.nestedAttributes != null) {
+                Attribute found = findAttribute(id, attribute.nestedAttributes);
+                if (found != null) {
+                    return found;
+                }
+            }
+        }
+        return null;
+    }
 	
 
 	public RecordProperty propertyByType(AttributeType type) {
@@ -119,4 +141,19 @@ public class Survey extends Persistent {
 		
 		return all;
 	}
+
+    public void addAttribute(Attribute attribute) {
+        if (attributes == null) {
+            attributes = new ArrayList<Attribute>();
+        }
+        attributes.add(attribute);
+    }
+
+    public void addAttribute(AttributeType type, String name, int serverId) {
+        Attribute attribute = new Attribute();
+        attribute.server_id = serverId;
+        attribute.setType(type);
+        attribute.name = name;
+        addAttribute(attribute);
+    }
 }
