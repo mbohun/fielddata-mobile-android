@@ -37,7 +37,6 @@
 
     <!-- Dashboard -->
     <string name="new_record">New recording</string>
-    <string name="view_field_guide">Species List</string>
     <string name="survey_list_title">Downloaded Surveys</string>
     <string name="default_icon_description">This survey is the default survey</string>
     <string-array name="tab_titles">
