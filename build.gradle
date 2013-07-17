@@ -4,9 +4,10 @@ buildscript {
   }
 
   dependencies {
-    classpath 'com.android.tools.build:gradle:0.4.2'
+    classpath 'com.android.tools.build:gradle:0.5+'
   }
 }
+
 
 allprojects {
 
@@ -28,5 +29,7 @@ task setupLibraries(type:Exec) {
     // This is platform specific... should really rewrite this script in groovy.
     commandLine './libraries/setupLibraries.bash'
 }
+
+task assemble {}
 
 apply plugin: 'android-reporting'

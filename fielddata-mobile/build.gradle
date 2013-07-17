@@ -4,7 +4,7 @@ buildscript {
         mavenLocal()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.4.2'
+        classpath 'com.android.tools.build:gradle:0.5+'
     }
 }
 apply plugin: 'android'
@@ -62,7 +62,7 @@ android {
         }
         nrmplus {
             packageName "au.org.ala.fielddata.mobile.nrmplus"
-            versionCode 3
+            versionCode 4
             versionName "1.1"
         }
         wbiocont {
