@@ -72,6 +72,8 @@ import au.org.ala.fielddata.mobile.validation.RecordValidator.RecordValidationRe
 import com.actionbarsherlock.app.ActionBar.LayoutParams;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.viewpagerindicator.TitlePageIndicator;
 
 /**
@@ -505,13 +507,21 @@ public class CollectSurveyData extends SherlockFragmentActivity implements
 
 	public void selectLocation() {
 
-        if (surveyViewModel.getSurvey().locationPolygon) {
-            selectPolygonLocation();
+        int checkGooglePlayServices =  GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+        if (checkGooglePlayServices != ConnectionResult.SUCCESS) {
+
+            GooglePlayServicesUtil.getErrorDialog(checkGooglePlayServices, this, 1122).show();
         }
         else {
-            selectPointLocation();
-        }
 
+            if (surveyViewModel.getSurvey().locationPolygon) {
+                selectPointLocation();
+            }
+            else {
+                selectPointLocation();
+                //selectPointLocation();
+            }
+        }
 	}
 
     public void selectPolygonLocation() {
