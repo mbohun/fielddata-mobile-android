@@ -221,7 +221,7 @@ public class PointLocationSelectionActivity extends SherlockFragmentActivity imp
 
     private void initHelp() {
         final View help = findViewById(R.id.help);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             help.setVisibility(View.INVISIBLE);
         }
         help.setOnClickListener(new View.OnClickListener() {
@@ -237,7 +237,7 @@ public class PointLocationSelectionActivity extends SherlockFragmentActivity imp
         final View help = findViewById(R.id.help);
         if (help.getVisibility() != View.VISIBLE) {
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 help.setY(-help.getHeight());
                 help.setVisibility(View.VISIBLE);
 
@@ -258,7 +258,7 @@ public class PointLocationSelectionActivity extends SherlockFragmentActivity imp
 
             // Note we don't set the visibility back to GONE as we only want to show the
             // help once and this saves us having to store state.
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 help.animate().y(-help.getHeight());
             }
             else {
