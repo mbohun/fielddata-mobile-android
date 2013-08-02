@@ -237,6 +237,8 @@ public class SpeciesDAO extends GenericDAO<Species> {
 	}
 
     public void saveSpeciesGroups(List<SpeciesGroup> groups, SQLiteDatabase db) {
+        db.execSQL("delete from "+SPECIES_GROUP_TABLE);
+
         InsertHelper insertHelper = new InsertHelper(db, SPECIES_GROUP_TABLE);
 
         saveSpeciesGroups(groups, insertHelper);

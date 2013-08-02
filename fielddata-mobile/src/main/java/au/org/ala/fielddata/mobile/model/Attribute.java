@@ -18,8 +18,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Attribute extends SurveyProperty {
-	
-	public static enum AttributeType {
+
+    public Integer id;
+
+    public static enum AttributeType {
 		
 		INTEGER("IN", "Integer"),
 	    INTEGER_WITH_RANGE("IR", "Integer Range"),

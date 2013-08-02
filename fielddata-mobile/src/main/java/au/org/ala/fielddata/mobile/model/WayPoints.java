@@ -47,10 +47,10 @@ public class WayPoints implements Parcelable {
 			return "POINT ("+verticiesToText()+")";
 		}
 		else if (polygonClosed) {
-			return "POLYGON (("+verticiesToText()+"))";
+			return "MULTIPOLYGON (("+verticiesToText()+"))";
 		}
 		else {
-			return "LINESTRING ("+verticiesToText()+")";
+			return "MULTILINESTRING ("+verticiesToText()+")";
 		}
 	}
 	
@@ -154,4 +154,35 @@ public class WayPoints implements Parcelable {
         }
         return null;
     }
+
+    public void verticiesFromWkt(String locationWkt) {
+        if (locationWkt == null) {
+            return;
+        }
+
+        if (locationWkt.startsWith("POINT")) {
+            setClosed(false);
+        }
+        else if (locationWkt.startsWith("MULTIPOLYGON")) {
+            setClosed(true);
+        }
+        else if (locationWkt.startsWith("MULTILINESTRING")) {
+            setClosed(false);
+        }
+        else {
+            throw new IllegalArgumentException("Cannot create WayPoints from badly formed WKT : "+locationWkt);
+        }
+        // Because we only support a small subset of geometries, we can do the parsing in
+        // a simplistic manner.
+        decode(locationWkt.substring(locationWkt.lastIndexOf("("), locationWkt.indexOf(")")));
+    }
+
+    private void decode(String wktCoordinates) {
+        String[] coordinates = wktCoordinates.split(",");
+        for (String coordinate : coordinates) {
+            addVertex(new WayPoint(coordinate));
+        }
+    }
+
+
 }

@@ -36,7 +36,7 @@ import au.org.ala.fielddata.mobile.model.User;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
 	private static final String DATABASE_NAME = "FieldData.db";
-	private static final int SCHEMA_VERSION = 4;
+	private static final int SCHEMA_VERSION = 5;
 
     private static final String SERVER_ID_COLUMN = "server_id";
 
@@ -115,14 +115,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 				version2(db);
 				break;
 			
-			case 3:
+			case 3: // NRMPlus 1.0.1
                 Log.i("DatabaseHelper", "Upgrading to version 3");
 				version3(db);
 				break;
-			case 4:
+			case 4: // NRMPlus 1.1
                 Log.i("DatabaseHelper", "Upgrading to version 4");
 				version4(db);
 				break;
+            case 5:
+                Log.i("DatabaseHelper", "Upgrading to version 5");
+                version5(db);
+                break;
+
 			}
 			
 		}
@@ -159,7 +164,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         createRecordIndexes(db);
         createAttributeRowTable(db);
 		db.execSQL("ALTER TABLE "+RecordDAO.ATTRIBUTE_VALUE_TABLE+" ADD COLUMN row_id INTEGER");
-	}
+
+    }
+
+    private void version5(SQLiteDatabase db) {
+        db.execSQL("ALTER TABLE "+RecordDAO.RECORD_TABLE+" ADD COLUMN attributes_json TEXT");
+        db.execSQL("ALTER TABLE "+DraftRecordDAO.DRAFT_RECORD_TABLE+" ADD COLUMN attributes_json TEXT");
+    }
 
 	private void createRecordTable(SQLiteDatabase db) {
 		

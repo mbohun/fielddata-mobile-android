@@ -59,7 +59,7 @@ public class Record extends Persistent {
 	public Integer taxon_id; // Server id of the taxon.
 	public String scientificName;
 	private Location pointLocation;
-	
+	private String locationWkt;
 	
 	
 	private List<AttributeValue> attributeValues;
@@ -350,6 +350,15 @@ public class Record extends Persistent {
 		}
 	}
 
+    public List<AttributeValues> getNestedValues(Attribute attribute) {
+        if (!attribute.getType().supportsNestedValues()) {
+            throw new IllegalArgumentException("Nested values are not supported for attributes of type: "+attribute.getType());
+        }
+        AttributeValue value = valueOf(attribute);
+
+        return value.getNestedValues();
+    }
+
     /**
      * Sets the value of a census method typed attribute.
      * @param attribute Identifies the attribute the value belongs to.
@@ -466,5 +475,13 @@ public class Record extends Persistent {
 	public Location getLocation() {
 		return pointLocation;
 	}
+
+    public void setLocationWkt(String wkt) {
+        this.locationWkt = wkt;
+    }
+
+    public String getLocationWkt() {
+        return locationWkt;
+    }
 	
 }

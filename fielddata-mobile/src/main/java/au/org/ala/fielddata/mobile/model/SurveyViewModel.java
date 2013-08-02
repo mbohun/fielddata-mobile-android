@@ -360,19 +360,44 @@ public class SurveyViewModel {
 	}
 	
 	public void setWayPoints(WayPoints wayPoints) {
-		// Gotta do me some magic here.
-        Location location = wayPoints.getLocation();
-        if (location != null) {
-            setLocation(location);
+
+        if (wayPoints.getVerticies().size() > 1) {
+             record.setLocationWkt(wayPoints.verticiesToWKT());
+        }
+        else {
+            Location location = wayPoints.getLocation();
+            if (location != null) {
+                setLocation(location);
+            }
         }
         if (wayPoints.getPhotoPointAttribute() > 0) {
 		    List<PhotoPoint> photopointList = wayPoints.getPhotoPoints();
             PhotopointMapper mapper = new PhotopointMapper(survey);
             mapper.map(record, photopointList, survey.getAttribute(wayPoints.getPhotoPointAttribute()));
         }
+    }
 
-        // TODO set location....
-        //        String location = wayPoints.verticiesToWKT();
+
+    public WayPoints getWayPoints() {
+        Attribute photoPointAttriute = survey.getPhotoPointAttribute();
+        if (photoPointAttriute == null) {
+            return null;
+        }
+        WayPoints wayPoints = new WayPoints(photoPointAttriute.server_id);
+
+        PhotopointMapper mapper = new PhotopointMapper(survey);
+
+        List<PhotoPoint> photoPoints = mapper.map(record, photoPointAttriute);
+        if (photoPoints != null) {
+            for (PhotoPoint point : photoPoints) {
+                wayPoints.addPhotoPoint(point);
+            }
+        }
+        if (record.getLocationWkt() != null) {
+            wayPoints.verticiesFromWkt(record.getLocationWkt());
+        }
+
+        return wayPoints;
 
     }
 

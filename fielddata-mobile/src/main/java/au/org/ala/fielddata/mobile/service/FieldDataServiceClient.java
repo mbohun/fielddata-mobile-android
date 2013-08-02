@@ -31,6 +31,8 @@ import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+
+import au.org.ala.fielddata.mobile.model.Attribute;
 import au.org.ala.fielddata.mobile.model.Record;
 import au.org.ala.fielddata.mobile.model.Species;
 import au.org.ala.fielddata.mobile.model.SpeciesGroup;
@@ -162,7 +164,6 @@ public class FieldDataServiceClient extends WebServiceClient {
 		survey.server_id = surveyResponse.details.id;
 		survey.lastSync = System.currentTimeMillis();
 		survey.name = surveyResponse.details.name;
-		survey.attributes = surveyResponse.attributes;
 		survey.recordProperties = surveyResponse.recordProperties;
 		survey.map = surveyResponse.map;
 		survey.description = surveyResponse.details.description;
@@ -171,8 +172,23 @@ public class FieldDataServiceClient extends WebServiceClient {
         survey.locationPolygon = surveyResponse.locationPolygon;
         //survey.photoPointAttribute = surveyResponse.photoPointAttribute;
 
-		return survey;
+        survey.attributes = surveyResponse.attributes;
+        updateIds(survey.attributes);
+        return survey;
 	}
+
+    private void updateIds(List<Attribute> attributes) {
+        if (attributes == null) {
+            return;
+        }
+        for (Attribute attribute : attributes) {
+            if (attribute.server_id == null && attribute.id != null) {
+                attribute.server_id = attribute.id;
+            }
+
+            updateIds(attribute.nestedAttributes);
+        }
+    }
 	
 	private String jsonSurveyIds(List<Survey> surveys) {
 		JSONArray ids = new JSONArray();

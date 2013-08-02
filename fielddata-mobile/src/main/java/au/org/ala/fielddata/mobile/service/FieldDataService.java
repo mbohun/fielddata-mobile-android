@@ -74,12 +74,7 @@ public class FieldDataService {
 		try {
 			db.beginTransaction();
 			SpeciesDAO speciesDAO = new SpeciesDAO(ctx);
-            speciesDAO.deleteAll(db);
-			SurveyDAO surveyDAO = new SurveyDAO(ctx);
-            surveyDAO.deleteAll(Survey.class, db);
-
-            RecordDAO recordDAO = new RecordDAO(ctx);
-            recordDAO.deleteAll(db);
+            SurveyDAO surveyDAO = new SurveyDAO(ctx);
 
             List<Integer> surveysWithSpecies = new ArrayList<Integer>();
             int count = 0;

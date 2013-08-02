@@ -173,11 +173,11 @@ public class WayPointActivity extends SherlockFragmentActivity implements InfoWi
 			// to clear the map and re-add everything.
 			map.clear();
 			final LatLngBounds.Builder builder = new LatLngBounds.Builder();
-			restoreWayPoints(wayPoints.getVerticies(), builder, BitmapDescriptorFactory.HUE_RED);
+			boolean hasArea = restoreWayPoints(wayPoints.getVerticies(), builder, BitmapDescriptorFactory.HUE_RED);
 			restoreWayPoints(wayPoints.getPhotoPoints(), builder, BitmapDescriptorFactory.HUE_BLUE);
 			
 			drawLine();
-			if (setZoom) {
+			if (setZoom && hasArea) {
 				findViewById(android.R.id.content).post(new Runnable() {
 					public void run() {
 						map.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 100));
@@ -201,7 +201,7 @@ public class WayPointActivity extends SherlockFragmentActivity implements InfoWi
 
 	}
 	
-	private void restoreWayPoints(List<? extends WayPoint> wayPoints, LatLngBounds.Builder bounds, float markerColour) {
+	private boolean restoreWayPoints(List<? extends WayPoint> wayPoints, LatLngBounds.Builder bounds, float markerColour) {
 		LatLng location;
 		for (WayPoint wayPoint : wayPoints) {
 			location = wayPoint.coordinate();
@@ -209,6 +209,7 @@ public class WayPointActivity extends SherlockFragmentActivity implements InfoWi
 			Marker marker = addMarker(location, markerColour);
 			wayPoint.markerId = marker.getId();
 		}
+        return wayPoints.size() > 0;
 	}
 
 	@Override

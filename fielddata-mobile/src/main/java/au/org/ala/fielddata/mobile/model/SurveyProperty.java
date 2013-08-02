@@ -21,8 +21,7 @@ public class SurveyProperty {
 	public String description;
 	public String name;
 	public Boolean required;
-	
-	
+
 	public Integer getServerId() {
 		return server_id;
 	}

@@ -515,10 +515,10 @@ public class CollectSurveyData extends SherlockFragmentActivity implements
         else {
 
             if (surveyViewModel.getSurvey().locationPolygon) {
-                selectPointLocation();
+                selectPolygonLocation();
             }
             else {
-                selectPointLocation();
+                selectPolygonLocation();
                 //selectPointLocation();
             }
         }
@@ -539,6 +539,8 @@ public class CollectSurveyData extends SherlockFragmentActivity implements
         if (location != null) {
             intent.putExtra(PointLocationSelectionActivity.LOCATION_BUNDLE_KEY, location);
         }
+
+        intent.putExtra(WayPointActivity.WAY_POINTS_KEY, surveyViewModel.getWayPoints());
 
         startActivityForResult(intent, CollectSurveyData.SELECT_POLYGON_LOCATION_REQUEST);
     }

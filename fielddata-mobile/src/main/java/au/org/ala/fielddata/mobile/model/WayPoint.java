@@ -12,7 +12,10 @@ public class WayPoint implements Parcelable {
 
 	public String markerId;
 	
-	
+	public WayPoint(String coordinates) {
+        markerId = null;
+        fromWkt(coordinates);
+    }
 	public WayPoint(Location location, String markerId) {
         this.location = location;
         this.markerId = markerId;
@@ -44,6 +47,14 @@ public class WayPoint implements Parcelable {
 		coordinates.append(location.getLatitude());
 		return coordinates.toString();
 	}
+
+    public void fromWkt(String coordinates) {
+        String[] latLng = coordinates.split(" ");
+        location = new Location("Saved Value");
+        location.setLongitude(Double.parseDouble(latLng[0]));
+        location.setLatitude(Double.parseDouble(latLng[1]));
+
+    }
 	
 	public static final Parcelable.Creator<WayPoint> CREATOR = new Parcelable.Creator<WayPoint>() {
 		public WayPoint createFromParcel(Parcel in) {

@@ -1,5 +1,6 @@
 package au.org.ala.fielddata.mobile.dao;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,11 +11,16 @@ import android.database.DatabaseUtils;
 import android.database.DatabaseUtils.InsertHelper;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
+import android.util.Log;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import au.org.ala.fielddata.mobile.model.AttributeValues;
 import au.org.ala.fielddata.mobile.model.Record;
 import au.org.ala.fielddata.mobile.model.Record.AttributeValue;
 import au.org.ala.fielddata.mobile.model.Record.PropertyAttributeValue;
+import au.org.ala.fielddata.mobile.service.dto.Mapper;
 
 /**
  * The RecordDAO is responsible for storing and retrieving Records from the 
@@ -50,6 +56,7 @@ public class RecordDAO extends GenericDAO<Record> {
 	public static final int TAXON_ID_COLUMN = 15;
 	public static final int STATUS_COLUMN = 16;
 	public static final int SCIENTIFIC_NAME_COLUMN = 17;
+    public static final int ATTRIBUTES_JSON_COLUMN = 18;
 	
 	// Column indexes for the ATTRIBUTE_VALUE table (select *)
 	public static final int RECORD_ID_COLUMN = 4;
@@ -84,7 +91,8 @@ public class RecordDAO extends GenericDAO<Record> {
 	    "survey_id INTEGER, "+
 	    "taxon_id INTEGER, "+
 	    "status INTEGER, " +
-	    "scientific_name TEXT";
+	    "scientific_name TEXT, "+
+        "attributes_json TEXT";
 		
     public static final String RECORD_TABLE_DDL = "CREATE TABLE "+RECORD_TABLE+
 	" ("+ RECORD_COLUMNS+ ")";
@@ -158,8 +166,6 @@ public class RecordDAO extends GenericDAO<Record> {
 			db.delete(attributeValueTable, whereClause, params);
 		}
 
-        saveAttributeValues(db, id, now, record.getAttributeValues());
-		
 		
 		return id;
 	}
@@ -247,7 +253,11 @@ public class RecordDAO extends GenericDAO<Record> {
 		values.put("status", record.getStatus().ordinal());
 		values.put("scientific_name", record.scientificName);
 		record.updated = now;
-		return update;
+
+        Gson gson = Mapper.getGson(context);
+        values.put("attributes_json", gson.toJson(record.getAttributeValues()));
+
+        return update;
 	}
 	
 	protected Record map(SQLiteDatabase db, Cursor result, Class<Record> modelClass) {
@@ -277,9 +287,11 @@ public class RecordDAO extends GenericDAO<Record> {
 		record.setStatus(Record.Status.values()[status]);
 		record.scientificName = result.getString(SCIENTIFIC_NAME_COLUMN);
 
-        List<AttributeValue> attributeValueList = queryAttributeValues(db, record);
-        //List<AttributeValues> attributeValuesList = queryNestedAttributeValue(db, record);
-
+        Type listType = new TypeToken<ArrayList<AttributeValue>>() {}.getType();
+        Gson gson = Mapper.getGson(context);
+        String attributesJson = result.getString(ATTRIBUTES_JSON_COLUMN);
+        Log.d("RecordDAO", "Attributes: " + attributesJson);
+        List<AttributeValue> attributeValueList = gson.fromJson(attributesJson, listType);
 
         record.getAttributeValues().addAll(attributeValueList);
 		return record;
