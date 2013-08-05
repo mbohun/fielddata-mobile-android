@@ -22,8 +22,6 @@ import au.org.ala.fielddata.mobile.model.WayPoint;
  */
 public class WayPointTest extends AndroidTestCase {
 
-    private static final int PHOTO_POINT_ATTRIBUTE = 1;
-
     public void setUp() throws Exception {
         super.setUp();
     }
