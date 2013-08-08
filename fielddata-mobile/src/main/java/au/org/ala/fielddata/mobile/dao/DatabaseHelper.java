@@ -170,6 +170,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private void version5(SQLiteDatabase db) {
         db.execSQL("ALTER TABLE "+RecordDAO.RECORD_TABLE+" ADD COLUMN attributes_json TEXT");
         db.execSQL("ALTER TABLE "+DraftRecordDAO.DRAFT_RECORD_TABLE+" ADD COLUMN attributes_json TEXT");
+
+        db.execSQL("ALTER TABLE "+RecordDAO.RECORD_TABLE+" ADD COLUMN location_wkt TEXT");
+        db.execSQL("ALTER TABLE "+DraftRecordDAO.DRAFT_RECORD_TABLE+" ADD COLUMN location_wkt TEXT");
+
     }
 
 	private void createRecordTable(SQLiteDatabase db) {

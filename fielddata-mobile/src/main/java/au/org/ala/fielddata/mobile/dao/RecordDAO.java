@@ -57,6 +57,7 @@ public class RecordDAO extends GenericDAO<Record> {
 	public static final int STATUS_COLUMN = 16;
 	public static final int SCIENTIFIC_NAME_COLUMN = 17;
     public static final int ATTRIBUTES_JSON_COLUMN = 18;
+    public static final int LOCATION_WKT_COLUMN = 19;
 	
 	// Column indexes for the ATTRIBUTE_VALUE table (select *)
 	public static final int RECORD_ID_COLUMN = 4;
@@ -92,7 +93,8 @@ public class RecordDAO extends GenericDAO<Record> {
 	    "taxon_id INTEGER, "+
 	    "status INTEGER, " +
 	    "scientific_name TEXT, "+
-        "attributes_json TEXT";
+        "attributes_json TEXT, " +
+        "location_wkt TEXT";
 		
     public static final String RECORD_TABLE_DDL = "CREATE TABLE "+RECORD_TABLE+
 	" ("+ RECORD_COLUMNS+ ")";
@@ -245,6 +247,7 @@ public class RecordDAO extends GenericDAO<Record> {
 			values.put("accuracy", (Float)null);
 			values.put("point_millis", (Long)null);
 		}
+        values.put("location_wkt", record.getLocationWkt());
 		values.put("when_millis", record.when);
 		values.put("notes", record.notes);
 		values.put("survey_id", record.survey_id);
@@ -281,6 +284,7 @@ public class RecordDAO extends GenericDAO<Record> {
 			record.setLocation(location);
 		}
 		record.location = result.getInt(LOCATION_ID_COLUMN);
+        record.setLocationWkt(result.getString(LOCATION_WKT_COLUMN));
 		record.survey_id = result.getInt(SURVEY_ID_COLUMN);
 		record.taxon_id = result.getInt(TAXON_ID_COLUMN);
 		int status = result.getInt(STATUS_COLUMN);

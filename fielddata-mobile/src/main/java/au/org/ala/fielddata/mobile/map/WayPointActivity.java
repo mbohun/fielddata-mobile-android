@@ -349,8 +349,11 @@ public class WayPointActivity extends SherlockFragmentActivity implements InfoWi
 	
 	private void updateLine(Marker marker) {
 		WayPoint wayPoint = wayPoints.findById(marker.getId());
-		wayPoint.location = locationFromClick(marker.getPosition());
-		drawLine();
+        if (wayPoint != null && !(wayPoint instanceof PhotoPoint)) {
+            wayPoint.location = locationFromClick(marker.getPosition());
+
+		    drawLine();
+        }
 	}
 
 	

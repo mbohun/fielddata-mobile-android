@@ -362,14 +362,14 @@ public class SurveyViewModel {
 	public void setWayPoints(WayPoints wayPoints) {
 
         if (wayPoints.getVerticies().size() > 1) {
-             record.setLocationWkt(wayPoints.verticiesToWKT());
+            record.setLocationWkt(wayPoints.verticiesToWKT());
         }
-        else {
-            Location location = wayPoints.getLocation();
-            if (location != null) {
-                setLocation(location);
-            }
+
+        Location location = wayPoints.getLocation();
+        if (location != null) {
+            setLocation(location);
         }
+
         if (wayPoints.getPhotoPointAttribute() > 0) {
 		    List<PhotoPoint> photopointList = wayPoints.getPhotoPoints();
             PhotopointMapper mapper = new PhotopointMapper(survey);

@@ -12,9 +12,12 @@ public class PhotoPoint extends WayPoint {
 
     public Uri photo;
 
+    public PhotoPoint(Location location) {
+        this(location, null);
+    }
+
     public PhotoPoint(Location location, String markerId) {
         super(location, markerId);
-
     }
     public PhotoPoint(Parcel in) {
         super(in);
