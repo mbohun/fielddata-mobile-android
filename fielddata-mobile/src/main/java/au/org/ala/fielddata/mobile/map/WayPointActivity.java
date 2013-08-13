@@ -15,11 +15,14 @@ import android.location.LocationManager;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+
 import au.org.ala.fielddata.mobile.CollectSurveyData;
 import au.org.ala.fielddata.mobile.model.MapDefaults;
 import au.org.ala.fielddata.mobile.model.PhotoPoint;
@@ -87,7 +90,7 @@ public class WayPointActivity extends SherlockFragmentActivity implements InfoWi
 		locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
 		initialiseMap(setZoom);
 		addEventHandlers();
-
+        initHelp();
 	}
 	
 	
@@ -177,28 +180,25 @@ public class WayPointActivity extends SherlockFragmentActivity implements InfoWi
 			restoreWayPoints(wayPoints.getPhotoPoints(), builder, BitmapDescriptorFactory.HUE_BLUE);
 			
 			drawLine();
-			if (setZoom && hasArea) {
+			if (hasArea) {
 				findViewById(android.R.id.content).post(new Runnable() {
 					public void run() {
 						map.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 100));
 					}
 				});
 			}
-			
-		} else {
-            int photoPointAttributeId = getIntent().getIntExtra(ATTRIBUTE_ID_KEY, 0);
-			wayPoints = new WayPoints(photoPointAttributeId);
-			if (setZoom) {
-				MapDefaults mapDefaults = getIntent().getParcelableExtra(
-						MAP_DEFAULTS_BUNDLE_KEY);
-				if (mapDefaults != null && mapDefaults.center != null) {
-					
-					LatLng latlng = new LatLng(mapDefaults.center.y, mapDefaults.center.x);
-					map.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, mapDefaults.zoom));
-				}
-			}
-		}
+            else {
+                MapDefaults mapDefaults = getIntent().getParcelableExtra(
+                        MAP_DEFAULTS_BUNDLE_KEY);
+                if (mapDefaults != null && mapDefaults.center != null) {
 
+                    LatLng latlng = new LatLng(mapDefaults.center.y, mapDefaults.center.x);
+                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, mapDefaults.zoom));
+                }
+            }
+
+			
+		}
 	}
 	
 	private boolean restoreWayPoints(List<? extends WayPoint> wayPoints, LatLngBounds.Builder bounds, float markerColour) {
@@ -314,6 +314,7 @@ public class WayPointActivity extends SherlockFragmentActivity implements InfoWi
 				Location selectedLocation = locationFromClick(location);
 				
 				addVertex(selectedLocation);
+                hideHelp();
 			}
 
 			
@@ -325,6 +326,13 @@ public class WayPointActivity extends SherlockFragmentActivity implements InfoWi
 				return false;
 			}
 		});
+
+        this.map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                showHelp();
+            }
+        });
 		
 	}
 
@@ -382,6 +390,57 @@ public class WayPointActivity extends SherlockFragmentActivity implements InfoWi
 			new PhotoLocationLoader(this, photoInProgress).execute();
 		}
 	}
+
+    private void initHelp() {
+        final View help = findViewById(R.id.help);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            help.setVisibility(View.INVISIBLE);
+        }
+        help.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                hideHelp();
+            }
+        });
+    }
+
+    @TargetApi(12)
+    private void showHelp() {
+        final View help = findViewById(R.id.help);
+        if (help.getVisibility() != View.VISIBLE) {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                help.setY(-help.getHeight());
+                help.setVisibility(View.VISIBLE);
+
+                help.animate().y(0);
+            }
+            else {
+                help.setVisibility(View.VISIBLE);
+            }
+
+        }
+    }
+
+    @TargetApi(12)
+    private void hideHelp() {
+
+        View help = findViewById(R.id.help);
+        if (help.getVisibility() == View.VISIBLE) {
+
+            // Note we don't set the visibility back to GONE as we only want to show the
+            // help once and this saves us having to store state.
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                help.animate().y(-help.getHeight());
+            }
+            else {
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)help.getLayoutParams();
+
+                params.height = 0;
+                help.setLayoutParams(params);
+            }
+        }
+    }
 	
 	static class PhotoLocationLoader extends AsyncTask<Void, Void, Location> {
 
