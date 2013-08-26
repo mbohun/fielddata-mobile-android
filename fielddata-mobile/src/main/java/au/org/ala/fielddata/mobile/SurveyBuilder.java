@@ -172,7 +172,7 @@ public class SurveyBuilder {
 		case MULTI_CHECKBOX:
 			view = buildMultiSpinner(attribute, parent);
 			break;
-		default:
+        default:
 			view = buildEditText(InputType.TYPE_CLASS_TEXT, parent);
 			break;
 		}

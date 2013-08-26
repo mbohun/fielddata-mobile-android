@@ -265,6 +265,9 @@ public class SurveyViewModel {
         case TIME:
         case DWC_TIME:
             return false;  // Time is automatically recorded but we don't yet allow it's explicit selection.
+        case CENSUS_METHOD_COL:
+        case CENSUS_METHOD_ROW:
+            return false; // These are only supported for photopoints and editing is only via the map.
 		}
 		return true;
 	}
@@ -380,17 +383,21 @@ public class SurveyViewModel {
 
     public WayPoints getWayPoints() {
         Attribute photoPointAttriute = survey.getPhotoPointAttribute();
-        if (photoPointAttriute == null) {
-            return null;
+        int photoPointAttributeId = -1;
+        if (photoPointAttriute != null) {
+            photoPointAttributeId = photoPointAttriute.server_id;
         }
-        WayPoints wayPoints = new WayPoints(photoPointAttriute.server_id);
+        WayPoints wayPoints = new WayPoints(photoPointAttributeId);
 
-        PhotopointMapper mapper = new PhotopointMapper(survey);
+        if (photoPointAttriute != null) {
+            PhotopointMapper mapper = new PhotopointMapper(survey);
 
-        List<PhotoPoint> photoPoints = mapper.map(record, photoPointAttriute);
-        if (photoPoints != null) {
-            for (PhotoPoint point : photoPoints) {
-                wayPoints.addPhotoPoint(point);
+            List<PhotoPoint> photoPoints = mapper.map(record, photoPointAttriute);
+
+            if (photoPoints != null) {
+                for (PhotoPoint point : photoPoints) {
+                    wayPoints.addPhotoPoint(point);
+                }
             }
         }
         if (record.getLocationWkt() != null) {

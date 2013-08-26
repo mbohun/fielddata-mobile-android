@@ -40,9 +40,9 @@ public class DownloadSurveyResponse {
 	public String name;
 	public String description;
 
-    public boolean locationPolygon = false;
-    public int photoPointAttribute = -1;
-	
+    public boolean locationPolygon;
+    public Integer polygonCensusMethod;
+
 	@SerializedName("attributesAndOptions")
 	public List<Attribute> attributes;
 	public List<RecordProperty> recordProperties;

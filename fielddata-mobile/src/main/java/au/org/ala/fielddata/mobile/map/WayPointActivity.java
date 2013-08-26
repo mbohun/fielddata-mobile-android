@@ -105,10 +105,13 @@ public class WayPointActivity extends SherlockFragmentActivity implements InfoWi
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		MenuItem openPolygon = menu.findItem(R.id.open_polygon);
 		MenuItem closePolygon = menu.findItem(R.id.close_polygon);
+        MenuItem photoPoints = menu.findItem(R.id.add_photopoint);
 	
 		boolean closed = wayPoints != null ? wayPoints.isClosed() : false;
 		openPolygon.setVisible(closed);
 		closePolygon.setVisible(!closed);
+
+        photoPoints.setVisible(wayPoints != null && wayPoints.getPhotoPointAttribute() > 0);
 		
 		return true;
 	}

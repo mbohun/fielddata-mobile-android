@@ -518,8 +518,7 @@ public class CollectSurveyData extends SherlockFragmentActivity implements
                 selectPolygonLocation();
             }
             else {
-                selectPolygonLocation();
-                //selectPointLocation();
+                selectPointLocation();
             }
         }
 	}

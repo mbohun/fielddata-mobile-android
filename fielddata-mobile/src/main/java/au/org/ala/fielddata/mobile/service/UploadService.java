@@ -26,6 +26,8 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
 import au.org.ala.fielddata.mobile.MobileFieldDataDashboard;
+import au.org.ala.fielddata.mobile.dao.SurveyDAO;
+import au.org.ala.fielddata.mobile.model.Survey;
 import au.org.ala.fielddata.mobile.nrmplus.R;
 import au.org.ala.fielddata.mobile.Utils;
 import au.org.ala.fielddata.mobile.dao.GenericDAO;
@@ -249,6 +251,13 @@ public class UploadService extends Service {
 		try {
 			
 			if (record.isValid()) {
+
+                SurveyDAO surveyDAO = new SurveyDAO(this);
+                Survey survey = surveyDAO.findByServerId(Survey.class, record.survey_id);
+                if (survey.polygonCensusMethod != null && survey.polygonCensusMethod > 0) {
+                    record.polygonCensusMethod = survey.polygonCensusMethod;
+                }
+
 				service.sync(tmp);
 				resultCode = SUCCESS;
 			}

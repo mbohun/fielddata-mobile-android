@@ -38,6 +38,7 @@ public class Survey extends Persistent {
 	public String description;
 	public MapDefaults map;
     public boolean locationPolygon = true;
+    public Integer polygonCensusMethod;
 
 	@SerializedName("attributesAndOptions")
 	public List<Attribute> attributes;
@@ -51,7 +52,7 @@ public class Survey extends Persistent {
 
     public Attribute getPhotoPointAttribute() {
         for (Attribute attribute : attributes) {
-            if (attribute.name.equalsIgnoreCase("photopoints")) {
+            if (attribute.name.equalsIgnoreCase("photopoints") && attribute.getType() == AttributeType.CENSUS_METHOD_COL) {
                 return attribute;
             }
         }

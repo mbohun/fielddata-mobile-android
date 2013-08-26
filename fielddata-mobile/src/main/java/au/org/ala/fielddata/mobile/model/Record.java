@@ -60,6 +60,9 @@ public class Record extends Persistent {
 	public String scientificName;
 	private Location pointLocation;
 	private String locationWkt;
+    @SerializedName("censusMethod_id")
+    public Integer polygonCensusMethod;
+
 	
 	
 	private List<AttributeValue> attributeValues;
