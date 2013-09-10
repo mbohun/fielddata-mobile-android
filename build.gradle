@@ -22,7 +22,7 @@ project(':libraries:ActionBarSherlock:actionbarsherlock') {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.6'
+    gradleVersion = '1.7'
 }
 
 task setupLibraries(type:Exec) {
