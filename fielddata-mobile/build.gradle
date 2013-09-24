@@ -51,9 +51,9 @@ android {
     productFlavors {
         npansw {
             packageName "au.org.ala.fieldcapture.mobile.npansw"
-            versionCode 3
-            versionName "1.0"
-
+            versionCode 4
+            versionName "1.0.1"
+            // Version 4 published to app store.  svn revision 554
         }
         ala {
             packageName "au.org.ala.fieldcapture.mobile.ala"
