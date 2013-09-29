@@ -14,8 +14,8 @@ import java.util.List;
 public class PhotopointMapper {
 
     // A photopoint expects attributes to be named according to a particular naming convention.
-    public static final String LATITUDE = "lat";
-    public static final String LONGITUDE = "lon";
+    public static final String LATITUDE = "ppLat";
+    public static final String LONGITUDE = "ppLong";
     public static final String BEARING = "bearing";
     public static final String DATE = "date";
 

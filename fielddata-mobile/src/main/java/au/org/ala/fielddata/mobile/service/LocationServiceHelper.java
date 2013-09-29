@@ -67,14 +67,13 @@ public class LocationServiceHelper extends Service implements LocationListener {
 	
 	private void requestLocationUpdates(boolean active) {
 		if (active) {
-			final int TEN_SECONDS = 10000;
 			if (hasGps) {
 				locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, TEN_SECONDS, DISTANCE_CHANGE, this);
 			}
 		}
 		else {
 			if (hasGps) {
-				locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, TWO_MINUTES, DISTANCE_CHANGE, this);
+				locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, TEN_SECONDS, DISTANCE_CHANGE, this);
 			}
 		}
 	}
@@ -174,8 +173,8 @@ public class LocationServiceHelper extends Service implements LocationListener {
 	
 	// Makes a call about the quality of location updates.
 	// Taken from the Android developers guide.
-	private static final int TWO_MINUTES = 1000 * 60 * 2;
-	private static final int DISTANCE_CHANGE = 10;
+	private static final int TEN_SECONDS = 1000 * 10;
+	private static final int DISTANCE_CHANGE = 5;
 
 	/** Determines whether one Location reading is better than the current Location fix
 	  * @param location  The new Location that you want to evaluate
@@ -189,8 +188,8 @@ public class LocationServiceHelper extends Service implements LocationListener {
 
 	    // Check whether the new location fix is newer or older
 	    long timeDelta = location.getTime() - currentBestLocation.getTime();
-	    boolean isSignificantlyNewer = timeDelta > TWO_MINUTES;
-	    boolean isSignificantlyOlder = timeDelta < -TWO_MINUTES;
+	    boolean isSignificantlyNewer = timeDelta > TEN_SECONDS;
+	    boolean isSignificantlyOlder = timeDelta < -TEN_SECONDS;
 	    boolean isNewer = timeDelta > 0;
 
 	    // If it's been more than two minutes since the current location, use the new location
