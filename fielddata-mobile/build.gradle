@@ -75,8 +75,13 @@ android {
             versionCode 1
             versionName "0.1"
         }
-        actres {
-            packageName "au.org.ala.fielddata.mobile.actres"
+        actesdd {
+            packageName "au.org.ala.fielddata.mobile.actesdd"
+            versionCode 1
+            versionName "1.0"
+        }
+        actbioblitz {
+            packageName "au.org.ala.fielddata.mobile.actbioblitz"
             versionCode 1
             versionName "1.0"
         }

@@ -567,7 +567,7 @@ public class WayPointActivity extends SherlockFragmentActivity implements InfoWi
                 stopLocationUpdates();
 
                 if (WayPointActivity.this != null && WayPointActivity.this.getWindow() != null && WayPointActivity.this.getWindow().isActive()) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(WayPointActivity.this.getApplication());
+                    AlertDialog.Builder builder = new AlertDialog.Builder(WayPointActivity.this);
 
                     builder.setTitle("GPS timeout")
                             .setMessage("Unable to acquire a location via GPS.  You can use a long press on the map to outline your location manually.")
