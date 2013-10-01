@@ -40,9 +40,16 @@ public class LoginService extends WebServiceClient {
 		params.set("password", password);
 		
 		String url = getServerUrl() + loginUrl;
-		
-		LoginResponse result = getRestTemplate().postForObject(url, params, LoginResponse.class);
-		
+
+        LoginResponse result = null;
+        try {
+            result = getRestTemplate().postForObject(url, params, LoginResponse.class);
+        }
+        catch (NullPointerException e) {
+            // We are getting SSL connection reset errors - at least in the internal network
+            // which manifests itself as a NPE.  A retry is usually all that is required to fix it.
+            result = getRestTemplate().postForObject(url, params, LoginResponse.class);
+        }
 		Preferences prefs = new Preferences(ctx);
 		prefs.setFieldDataSessionKey(result.ident);
 		prefs.setFieldDataPath(result.portal.path);
