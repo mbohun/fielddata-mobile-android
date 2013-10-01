@@ -364,9 +364,7 @@ public class SurveyViewModel {
 	
 	public void setWayPoints(WayPoints wayPoints) {
 
-        if (wayPoints.getVerticies().size() > 1) {
-            record.setLocationWkt(wayPoints.verticiesToWKT());
-        }
+        record.setLocationWkt(wayPoints.verticiesToWKT());
 
         Location location = wayPoints.getLocation();
         if (location != null) {

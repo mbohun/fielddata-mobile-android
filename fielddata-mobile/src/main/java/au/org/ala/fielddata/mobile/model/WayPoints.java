@@ -47,9 +47,13 @@ public class WayPoints implements Parcelable {
 			return "POINT ("+verticiesToText()+")";
 		}
 		else if (polygonClosed) {
-			return "MULTIPOLYGON ((("+verticiesToText()+")))";
+            // Need to append the first point to the end to form a polygon.
+            String points = verticiesToText();
+            points+=", "+verticies.get(0).toWKT();
+            return "MULTIPOLYGON ((("+points+")))";
 		}
 		else {
+
 			return "MULTILINESTRING (("+verticiesToText()+"))";
 		}
 	}
@@ -161,10 +165,12 @@ public class WayPoints implements Parcelable {
             return;
         }
 
+        boolean skipLast = false;
         if (locationWkt.startsWith("POINT")) {
             setClosed(false);
         }
         else if (locationWkt.startsWith("MULTIPOLYGON")) {
+            skipLast = true;
             setClosed(true);
         }
         else if (locationWkt.startsWith("MULTILINESTRING")) {
@@ -180,12 +186,17 @@ public class WayPoints implements Parcelable {
         if (start < 0 || end < 0) {
             throw new IllegalArgumentException("Cannot create WayPoints from badly formed WKT : "+locationWkt);
         }
-        decode(locationWkt.substring(start, end));
+        decode(locationWkt.substring(start, end), skipLast);
     }
 
-    private void decode(String wktCoordinates) {
+    private void decode(String wktCoordinates, boolean skipLast) {
         String[] coordinates = wktCoordinates.split(",");
-        for (String coordinate : coordinates) {
+        int last = coordinates.length;
+        if (last > 1 && skipLast) {
+            last--;
+        }
+        for (int i=0; i<last; i++) {
+            String coordinate = coordinates[i];
             addVertex(new WayPoint(coordinate.trim()));
         }
     }

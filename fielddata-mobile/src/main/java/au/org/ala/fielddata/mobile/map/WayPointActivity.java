@@ -563,17 +563,23 @@ public class WayPointActivity extends SherlockFragmentActivity implements InfoWi
         }
         new Handler(getMainLooper()).post(new Runnable() {
             public void run() {
-                gpsTimeoutCount++;
-                stopLocationUpdates();
+                try {
+                    gpsTimeoutCount++;
+                    stopLocationUpdates();
 
-                if (WayPointActivity.this != null && WayPointActivity.this.getWindow() != null && WayPointActivity.this.getWindow().isActive()) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(WayPointActivity.this);
 
-                    builder.setTitle("GPS timeout")
-                            .setMessage("Unable to acquire a location via GPS.  You can use a long press on the map to outline your location manually.")
-                            .setPositiveButton("Ok", null)
-                            .show();
+                    if (WayPointActivity.this != null && WayPointActivity.this.getWindow() != null && WayPointActivity.this.getWindow().isActive()) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(WayPointActivity.this);
 
+                        builder.setTitle("GPS timeout")
+                                .setMessage("Unable to acquire a location via GPS.  You can use a long press on the map to outline your location manually.")
+                                .setPositiveButton("Ok", null)
+                                .show();
+
+                    }
+                }
+                catch (Exception e) {
+                    // This is ok - the timer will be cancelled if the activity is paused before it expires.
                 }
             }
 
@@ -587,7 +593,7 @@ public class WayPointActivity extends SherlockFragmentActivity implements InfoWi
             locationServiceConnection = null;
         }
         if (timer != null) {
-            timer.cancel(false);
+            timer.cancel(true);
             timer = null;
         }
 
