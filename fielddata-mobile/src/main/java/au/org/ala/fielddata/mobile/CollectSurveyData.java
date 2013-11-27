@@ -151,7 +151,6 @@ public class CollectSurveyData extends SherlockFragmentActivity implements
 
 		pagerAdapter = new SurveyPagerAdapter(getSupportFragmentManager());
 		pager = (ValidatingViewPager) findViewById(R.id.surveyPager);
-		pager.setAdapter(pagerAdapter);
 		leftArrow = findViewById(R.id.leftArrow);
 		rightArrow = findViewById(R.id.rightArrow);
 		Intent i = getIntent();
@@ -312,7 +311,9 @@ public class CollectSurveyData extends SherlockFragmentActivity implements
 		if (selectedSpecies != null) {
 			onSpeciesSelected(selectedSpecies);
 		}
-	}
+        pager.setAdapter(pagerAdapter);
+
+    }
 
 	public void onPageSelected(int page) {
 		int leftVisiblity = View.VISIBLE;

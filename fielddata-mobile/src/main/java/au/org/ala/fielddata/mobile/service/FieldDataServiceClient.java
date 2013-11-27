@@ -98,6 +98,10 @@ public class FieldDataServiceClient extends WebServiceClient {
 
 		String url = getServerUrl() + syncUrl;
 
+
+        Log.d("URL", url);
+        Log.d("Params", getGson().toJson(records.get(0)));
+
 		RestTemplate restTemplate = getRestTemplate();
 		SyncRecordsResponse result = restTemplate.postForObject(url, params,
 				SyncRecordsResponse.class);
@@ -111,6 +115,7 @@ public class FieldDataServiceClient extends WebServiceClient {
 		RestTemplate restTemplate = getRestTemplate();
 		restTemplate.getMessageConverters().add(
 				new StringHttpMessageConverter());
+        Log.d("URL", url);
 		UserSurveyResponse[] result = restTemplate.getForObject(url,
 				UserSurveyResponse[].class);
 
@@ -127,6 +132,7 @@ public class FieldDataServiceClient extends WebServiceClient {
                 callback.surveysDownloaded(++count, total);
             }
 
+            Log.d("URL", String.format(url, userSurvey.id, ident, downloadedSurveys));
             DownloadSurveyResponse surveyResponse = restTemplate.getForObject(
 					String.format(url, userSurvey.id, ident, downloadedSurveys),
 					DownloadSurveyResponse.class);
@@ -153,6 +159,7 @@ public class FieldDataServiceClient extends WebServiceClient {
 		}
 
 		RestTemplate restTemplate = getRestTemplate();
+        Log.d("URL", url);
 		DownloadSpeciesResponse response = restTemplate.getForObject(url, DownloadSpeciesResponse.class);
 		
 		return response.list;
@@ -231,13 +238,14 @@ public class FieldDataServiceClient extends WebServiceClient {
 	 */
 	public void downloadSpeciesProfileImage(String uuid) {
 		String url = getServerUrl()+downloadUrl+uuid;
-		Log.d("FieldDataServiceClient", "downloading species: "+uuid);
+		Log.d("URL", "downloading species: "+url);
 		ImageLoader.getInstance().loadImage(url, null);
 	}
 	
 	public void loadSurveyImage(ImageView imageView, String imageUrl) {
 		String url = getServerUrl()+imageUrl;
 		Log.d("FieldDataServiceClient", "loading survey image: "+url);
+        Log.d("URL", "downloading species: "+url);
 		ImageLoader.getInstance().displayImage(url, imageView, new SimpleImageLoadingListener() {
 						
 			public void onLoadingComplete(String arg0, View imageView, Bitmap arg2) {
@@ -249,6 +257,7 @@ public class FieldDataServiceClient extends WebServiceClient {
     public List<SpeciesGroup> downloadSpeciesGroups() {
 
         String url = getServerUrl()+"/species/speciesGroups";
+        Log.d("URL", url);
         RestTemplate restTemplate = getRestTemplate();
         SpeciesGroupResponse[] response = restTemplate.getForObject(url, SpeciesGroupResponse[].class);
         if (response == null) {

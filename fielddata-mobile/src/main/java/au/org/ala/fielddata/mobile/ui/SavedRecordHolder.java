@@ -10,6 +10,9 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.nostra13.universalimageloader.core.ImageLoader;
+
 import au.org.ala.fielddata.mobile.nrmplus.R;
 import au.org.ala.fielddata.mobile.model.Record;
 import au.org.ala.fielddata.mobile.model.Survey;
@@ -59,13 +62,8 @@ public class SavedRecordHolder {
 		Record record = recordView.record;
 		Uri image = record.getFirstImageUri();
 		if (image != null) {
-		
-			int w = icon.getLayoutParams().width;
-			int h = icon.getLayoutParams().height;
-			if (w > 0 && h > 0) {
-				Bitmap bitMap = storageManager.bitmapFromUri(image, w, h);
-				icon.setImageBitmap(bitMap);
-			}
+
+            ImageLoader.getInstance().displayImage(image.toString(), icon);
 		}
 		else {
 			icon.setImageBitmap(null);
