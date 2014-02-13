@@ -4,7 +4,7 @@ buildscript {
         mavenLocal()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.6+'
+        classpath 'com.android.tools.build:gradle:0.8.+'
     }
 }
 apply plugin: 'android'
@@ -31,7 +31,7 @@ dependencies {
 
 android {
     compileSdkVersion 'Google Inc.:Google APIs:17'
-    buildToolsVersion "17"
+    buildToolsVersion "19"
 
     defaultConfig {
         minSdkVersion 8
@@ -87,6 +87,11 @@ android {
             versionCode 1
             versionName "1.0"
         }
+        ganggang {
+            packageName "au.org.ala.fielddata.mobile.ganggang"
+            versionCode 1
+            versionName "1.0"
+        }
     }
 
     buildTypes {
@@ -95,6 +100,11 @@ android {
             jniDebugBuild false
             signingConfig signingConfigs.ala
         }
+    }
+
+    packagingOptions {
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/license.txt'
     }
 
 
