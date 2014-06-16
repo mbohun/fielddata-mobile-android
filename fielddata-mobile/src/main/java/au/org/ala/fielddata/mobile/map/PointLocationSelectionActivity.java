@@ -20,6 +20,7 @@ import android.view.ViewPropertyAnimator;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
@@ -110,9 +111,14 @@ public class PointLocationSelectionActivity extends SherlockFragmentActivity imp
 
 		}
         else if (item.getItemId() == R.id.add_waypoint) {
-            LatLng newLatLng  = setLocation(locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER));
-            map.animateCamera(CameraUpdateFactory.newLatLng(newLatLng));
-
+            Location newLoc = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+            if (newLoc != null) {
+                LatLng newLatLng = setLocation(newLoc);
+                map.animateCamera(CameraUpdateFactory.newLatLng(newLatLng));
+            }
+            else {
+                Toast.makeText(this, R.string.noCurrentLocation, Toast.LENGTH_LONG).show();
+            }
         }
 		return true;
 	}
