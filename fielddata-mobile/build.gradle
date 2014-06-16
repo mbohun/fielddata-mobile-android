@@ -51,44 +51,49 @@ android {
 
     productFlavors {
         npansw {
-            packageName "au.org.ala.fieldcapture.mobile.npansw"
+            applicationId "au.org.ala.fieldcapture.mobile.npansw"
             versionCode 4
             versionName "1.0.1"
             // Version 4 published to app store.  svn revision 560
         }
         ala {
-            packageName "au.org.ala.fieldcapture.mobile.ala"
+            applicationId "au.org.ala.fieldcapture.mobile.ala"
             versionCode 1
             versionName "1.0"
         }
         nrmplus {
-            packageName "au.org.ala.fielddata.mobile.nrmplus"
+            applicationId "au.org.ala.fielddata.mobile.nrmplus"
             versionCode 4
             versionName "1.1"
         }
         wbiocont {
-            packageName "au.org.ala.fielddata.mobile.wbiocont"
+            applicationId "au.org.ala.fielddata.mobile.wbiocont"
             versionCode 1
             versionName "0.1"
         }
         alcw {
-            packageName "au.org.ala.fielddata.mobile.alcw"
+            applicationId "au.org.ala.fielddata.mobile.alcw"
             versionCode 1
             versionName "0.1"
         }
         actesdd {
-            packageName "au.org.ala.fielddata.mobile.actesdd"
+            applicationId "au.org.ala.fielddata.mobile.actesdd"
             versionCode 2
             versionName "1.0"
             // Version 2 candidate for publication.
         }
         actbioblitz {
-            packageName "au.org.ala.fielddata.mobile.actbioblitz"
+            applicationId "au.org.ala.fielddata.mobile.actbioblitz"
             versionCode 1
             versionName "1.0"
         }
         ganggang {
-            packageName "au.org.ala.fielddata.mobile.ganggang"
+            applicationId "au.org.ala.fielddata.mobile.ganggang"
+            versionCode 1
+            versionName "1.0"
+        }
+        unisa {
+            applicationId "au.org.ala.fielddata.mobile.unisa"
             versionCode 1
             versionName "1.0"
         }
