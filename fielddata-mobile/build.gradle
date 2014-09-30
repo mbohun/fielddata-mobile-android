@@ -4,7 +4,7 @@ buildscript {
         mavenLocal()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.11.+'
+        classpath 'com.android.tools.build:gradle:0.12.+'
     }
 }
 apply plugin: 'android'
@@ -31,7 +31,7 @@ dependencies {
 
 android {
     compileSdkVersion 'Google Inc.:Google APIs:17'
-    buildToolsVersion "19.1.0"
+    buildToolsVersion "20.0"
 
     defaultConfig {
         minSdkVersion 8
