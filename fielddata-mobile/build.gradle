@@ -4,7 +4,7 @@ buildscript {
         mavenLocal()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.12.+'
+        classpath 'com.android.tools.build:gradle:1.0.1'
     }
 }
 apply plugin: 'android'
@@ -102,7 +102,7 @@ android {
     buildTypes {
         release {
             debuggable false
-            jniDebugBuild false
+            jniDebuggable false
             signingConfig signingConfigs.ala
         }
     }
