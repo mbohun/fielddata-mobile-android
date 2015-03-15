@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Warrumbungles Snap and Share</string>
+    <bool name="show_splash_screen">false</bool>
+    <integer name="splash_screen_duration">4000</integer>
+    <string-array name="portal_names">
+        <item>Warrumbungle National Park Fire Recovery Project</item>
+    </string-array>
+    <bool name="use_hr_as_page_break">false</bool>
+</resources>

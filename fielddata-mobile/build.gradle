@@ -97,6 +97,16 @@ android {
             versionCode 1
             versionName "1.0"
         }
+        oehsp {
+            applicationId "au.org.ala.fielddata.mobile.oehsp"
+            versionCode 1
+            versionName "1.0"
+        }
+        wfr {
+            applicationId "au.org.ala.fielddata.mobile.wfr"
+            versionCode 2
+            versionName "1.0"
+        }
     }
 
     buildTypes {
