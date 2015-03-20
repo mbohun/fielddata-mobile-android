@@ -28,12 +28,13 @@
     <string name="title_species_list">Species List</string>
     <string name="title_activity_view_saved_records">Saved records</string>
     <string name="saveButtonText">Save</string>
-    <string name="species_profile_image">Spcies profile image</string>
+    <string name="species_profile_image">Species profile image</string>
     <string name="change_date_button_text">Change</string>
     <string name="touch_to_select">Touch to select</string>
     <string name="no_location_supplied">No location supplied</string>
     <string name="no_photo">No photo selected</string>
     <string name="default_spinner_hint">Select an option</string>
+    <string name="upon_login"></string>
 
     <!-- Dashboard -->
     <string name="new_record">New recording</string>
@@ -105,7 +106,8 @@
 	<!-- Saved records page -->
 	<string name="photo_icon">Record photo</string>
 	<string name="draft">Draft</string>
-	
+    <string name="drafts_error">Draft records cannot be uploaded.</string>
+
 	<!-- species list menu items -->
 	<string name="species_action_title">Species Action</string>
 	<string name="record_observation">Record with %s survey</string>

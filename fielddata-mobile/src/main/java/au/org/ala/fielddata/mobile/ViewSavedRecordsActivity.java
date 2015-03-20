@@ -109,6 +109,10 @@ public class ViewSavedRecordsActivity extends SherlockListFragment implements Ac
 	@Override
 	public void onCreateOptionsMenu(Menu menu, com.actionbarsherlock.view.MenuInflater inflater) {
 		inflater.inflate(R.menu.saved_records_layout, menu);
+        if (getResources().getBoolean(R.bool.no_species)) {
+            final View v = getActivity().findViewById(R.id.record_description_species);
+            if (v != null) v.setVisibility(View.GONE);
+        }
 	}
 
 	public void reload() {
@@ -268,7 +272,7 @@ public class ViewSavedRecordsActivity extends SherlockListFragment implements Ac
 				}
 				else {
 					helpText = buildHelpText("Records will be uploaded automatically then deleted when the phone is connected to a data network.\n" +
-							"Uploaded records can be can be edited using the ");
+							"Uploaded records can be edited using the ");
 				}
 			}
 			else {
@@ -436,7 +440,7 @@ public class ViewSavedRecordsActivity extends SherlockListFragment implements Ac
 	}
 	
 	private void showDraftsError() {
-		Toast.makeText(getActivity(), "Draft records cannot be uploaded.", Toast.LENGTH_LONG).show();
+		Toast.makeText(getActivity(), R.string.drafts_error, Toast.LENGTH_LONG).show();
 	}
 
 

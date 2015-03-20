@@ -85,7 +85,10 @@ public class ActionBarFragment extends Fragment implements OnClickListener {
 		ImageButton button = (ImageButton)actionBar.findViewById(R.id.newRecordButton);
 		button.setOnClickListener(this);
 		button = (ImageButton)actionBar.findViewById(R.id.viewSpeciesListButton);
-		button.setOnClickListener(this);
+        if (getResources().getBoolean(R.bool.no_species))
+            button.setVisibility(View.GONE);
+        else
+    		button.setOnClickListener(this);
 	}
 
 	/**

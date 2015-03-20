@@ -131,8 +131,15 @@ public class MobileFieldDataDashboard extends SherlockFragmentActivity implement
 		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		String[] titles = getResources().getStringArray(R.array.tab_titles);
 
+        final boolean noSpecies = getResources().getBoolean(R.bool.no_species);
+        final String[] tabs = noSpecies?
+                new String[]{ SurveyListFragment.class.getName(), ViewSavedRecordsActivity.class.getName() }
+                :
+                new String[]{ SurveyListFragment.class.getName(),
+                SpeciesListActivity.class.getName(), ViewSavedRecordsActivity.class.getName() };
+
 		viewPager = (ViewPager) findViewById(R.id.tabContent);
-		TabsAdapter tabsAdapter = new TabsAdapter(this, viewPager);
+		TabsAdapter tabsAdapter = new TabsAdapter(this, viewPager, tabs);
 		viewPager.setAdapter(tabsAdapter);
 
 		int selectedTabIndex = 0;
@@ -142,8 +149,9 @@ public class MobileFieldDataDashboard extends SherlockFragmentActivity implement
 			selectedTabIndex = savedInstanceState.getInt(SELECTED_TAB_BUNDLE_KEY, 0);
 		}
 		selectedTabIndex = getIntent().getIntExtra(SELECTED_TAB_BUNDLE_KEY, selectedTabIndex);
-		
-		for (int i=0; i<titles.length; i++) {
+
+        for (int i=0; i<titles.length; i++) {
+            if (noSpecies && i == 1) continue;
 			String title = titles[i];
 			ActionBar.Tab tab = getSupportActionBar().newTab();
 			tab.setText(title);
@@ -190,18 +198,19 @@ public class MobileFieldDataDashboard extends SherlockFragmentActivity implement
 	public static class TabsAdapter extends FragmentPagerAdapter implements ActionBar.TabListener,
 			ViewPager.OnPageChangeListener {
 
-        private String[] tabClasses = { SurveyListFragment.class.getName(),
-				SpeciesListActivity.class.getName(), ViewSavedRecordsActivity.class.getName() };
-        private boolean[] needsReload = new boolean[tabClasses.length];
+        private String[] tabClasses;
+        private boolean[] needsReload;
 
 		private SherlockFragmentActivity ctx;
 		private ViewPager viewPager;
         private Fragment current;
 
-		public TabsAdapter(SherlockFragmentActivity ctx, ViewPager viewPager) {
+		public TabsAdapter(SherlockFragmentActivity ctx, ViewPager viewPager, String[] tabs) {
 			super(ctx.getSupportFragmentManager());
 			this.ctx = ctx;
 			this.viewPager = viewPager;
+            tabClasses = tabs;
+            needsReload = new boolean[tabs.length];
             Arrays.fill(needsReload, false);
 			viewPager.setOnPageChangeListener(this);
 		}
@@ -269,7 +278,22 @@ public class MobileFieldDataDashboard extends SherlockFragmentActivity implement
 		super.onStart();
 		if (isLoggedIn()) {
 			if (!preferences.getAskedAboutWifi()) {
-				showWifiPreferenceDialog();
+                final String uponLogin = getResources().getString(R.string.upon_login);
+                if (uponLogin.length() == 0) {
+                    showWifiPreferenceDialog();
+                } else {
+                    new AlertDialog.Builder(this)
+                    .setTitle("Welcome")
+                    .setMessage(uponLogin)
+                    .setCancelable(true)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(final DialogInterface dialog, final int id) {
+                            dialog.cancel();
+                            showWifiPreferenceDialog();
+                        }
+                    })
+                    .create().show();
+                }
 			}
 			
 			if (!askedAboutGPS) {
@@ -280,7 +304,7 @@ public class MobileFieldDataDashboard extends SherlockFragmentActivity implement
 					}
 				}
 			}
-		}
+        }
 	}
 
 	@Override
@@ -553,7 +577,7 @@ public class MobileFieldDataDashboard extends SherlockFragmentActivity implement
 		inflater.inflate(R.menu.common_menu_items, menu);
 		inflater.inflate(R.menu.dashboard_menu, menu);
 
-		newRecordMenuItem = menu.add("New Record");
+		newRecordMenuItem = menu.add(R.string.new_record_description);
 
 		newRecordMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS
 				| MenuItem.SHOW_AS_ACTION_WITH_TEXT);

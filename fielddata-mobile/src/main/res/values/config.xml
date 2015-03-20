@@ -8,4 +8,5 @@
         <item>National Parks Association of NSW</item>
     </string-array>
     <bool name="use_hr_as_page_break">false</bool>
+    <bool name="no_species">false</bool>
 </resources>

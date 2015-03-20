@@ -1,0 +1,42 @@
+<!--
+  Copyright (C) 2010 Atlas of Living Australia
+  All Rights Reserved.
+   
+  The contents of this file are subject to the Mozilla Public
+  License Version 1.1 (the "License"); you may not use this file
+  except in compliance with the License. You may obtain a copy of
+  the License at http://www.mozilla.org/MPL/
+   
+  Software distributed under the License is distributed on an "AS
+  IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+  implied. See the License for the specific language governing
+  rights and limitations under the License.
+-->
+<resources>
+    <string name="upon_login">The terms PHOTO and RECORD are used interchangeably.</string>
+    <string name="title_activity_view_saved_records">Saved photos</string>
+
+    <!-- Dashboard -->
+    <string name="new_record">New photo</string>
+    <string-array name="tab_titles">
+        <item>Surveys</item>
+        <item>Error</item>
+        <item>Photos</item>
+    </string-array>
+    
+    <!--  Action Bar -->
+    <string name="view_saved_records_description">View Saved Photos</string>
+    <string name="new_record_description">New Photo</string>
+    
+    <!-- Validation Errors -->
+    <string name="no_saved_records_message">No saved photos</string>
+    <string name="saved_records_message">%s saved photos</string>
+    <string name="saved_record_message">1 saved photo</string>
+
+	<!-- Saved records page -->
+	<string name="photo_icon">Photo</string>
+    <string name="drafts_error">Draft photos cannot be uploaded.</string>
+
+	<!-- species list menu items -->
+	<string name="record_observation">Photo with %s survey</string>
+</resources>
