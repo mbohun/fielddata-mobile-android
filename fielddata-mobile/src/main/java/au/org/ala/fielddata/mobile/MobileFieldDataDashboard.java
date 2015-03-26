@@ -283,7 +283,7 @@ public class MobileFieldDataDashboard extends SherlockFragmentActivity implement
                     showWifiPreferenceDialog();
                 } else {
                     new AlertDialog.Builder(this)
-                    .setTitle("Welcome")
+                    .setTitle("Please Note:")
                     .setMessage(uponLogin)
                     .setCancelable(true)
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {

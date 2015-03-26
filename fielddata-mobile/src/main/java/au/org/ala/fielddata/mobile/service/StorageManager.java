@@ -1,20 +1,22 @@
 package au.org.ala.fielddata.mobile.service;
 
+import android.annotation.TargetApi;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
+import android.os.ParcelFileDescriptor;
+import android.util.Log;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import android.annotation.TargetApi;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.util.Log;
 import au.org.ala.fielddata.mobile.model.Species;
 
 /**
@@ -194,11 +196,17 @@ public class StorageManager {
 		if ("file".equals(uri.getScheme())) {
 			bitmap = bitmapFromFile(uri, targetW, targetH);
 		} else if ("content".equals(uri.getScheme())) {
-			bitmap = MediaStore.Images.Thumbnails.getThumbnail(ctx.getContentResolver(),
-					Long.parseLong(uri.getLastPathSegment()),
-					MediaStore.Images.Thumbnails.MICRO_KIND, null);
+            try {
+                ParcelFileDescriptor pfdInput = ctx.getContentResolver().openFileDescriptor(uri, "r");
+                bitmap = BitmapFactory.decodeFileDescriptor(pfdInput.getFileDescriptor(), null, null);
+                pfdInput.close();
+                bitmap = ThumbnailUtils.extractThumbnail(bitmap, targetW, targetH);
+//			bitmap = MediaStore.Images.Thumbnails.getThumbnail(ctx.getContentResolver(),
+//					Long.parseLong(uri.getLastPathSegment()), <-- ERROR: not always a number
+//					MediaStore.Images.Thumbnails.MICRO_KIND, null);
+            } catch (Exception e) {
+            }
 		}
 		return bitmap;
 	}
-	
 }

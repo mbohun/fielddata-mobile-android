@@ -13,7 +13,7 @@
   rights and limitations under the License.
 -->
 <resources>
-    <string name="upon_login">The terms PHOTO and RECORD are used interchangeably.</string>
+    <string name="upon_login">A RECORD consists of a PHOTO and associated information.</string>
     <string name="title_activity_view_saved_records">Saved photos</string>
 
     <!-- Dashboard -->

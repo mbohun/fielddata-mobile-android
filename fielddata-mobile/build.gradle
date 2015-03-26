@@ -104,7 +104,7 @@ android {
         }
         wfr {
             applicationId "au.org.ala.fielddata.mobile.wfr"
-            versionCode 4
+            versionCode 5
             versionName "1.0"
         }
     }
