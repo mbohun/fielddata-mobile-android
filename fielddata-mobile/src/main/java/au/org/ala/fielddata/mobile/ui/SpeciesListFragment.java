@@ -35,7 +35,10 @@ import com.actionbarsherlock.app.SherlockListFragment;
 import com.commonsware.cwac.loaderex.acl.AbstractCursorLoader;
 
 public class SpeciesListFragment extends SherlockListFragment implements LoaderCallbacks<Cursor>, Reloadable {
-	
+
+    public static final String QUERY_ARG = "query";
+    public String query;
+
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,10 +66,26 @@ public class SpeciesListFragment extends SherlockListFragment implements LoaderC
     	}
     }
 
+
     public void reload() {
         if (getActivity() != null) {
             LoaderManager manager = getActivity().getSupportLoaderManager();
             manager.restartLoader(0, null, this);
+        }
+    }
+
+    public void clearSearch() {
+        this.query = null;
+        reload();
+    }
+
+    public void speciesSearch(String query) {
+        this.query = query;
+        if (getActivity() != null) {
+            LoaderManager manager = getActivity().getSupportLoaderManager();
+            Bundle args = new Bundle();
+            args.putString(QUERY_ARG, query);
+            manager.restartLoader(0, args, this);
         }
     }
     
@@ -76,8 +95,12 @@ public class SpeciesListFragment extends SherlockListFragment implements LoaderC
 
 	}
 
-	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
-		return new SpeciesLoader(getActivity());
+	public Loader<Cursor> onCreateLoader(int loaderId, Bundle args) {
+        String query = null;
+        if (args != null) {
+            query = args.getString(QUERY_ARG);
+        }
+		return new SpeciesLoader(getActivity(), query);
 	}
 
 	public void onLoadFinished(Loader<Cursor> arg0, Cursor cursor) {
@@ -92,12 +115,17 @@ public class SpeciesListFragment extends SherlockListFragment implements LoaderC
     static class SpeciesLoader extends AbstractCursorLoader {
 
     	private SpeciesDAO speciesDAO;
-    	public SpeciesLoader(Context ctx) {
+        private String query;
+    	public SpeciesLoader(Context ctx, String query) {
     		super(ctx);
     		speciesDAO = new SpeciesDAO(ctx);
+            this.query = query;
     	}
 		@Override
 		protected Cursor buildCursor() {
+            if (query != null) {
+                return speciesDAO.searchSpecies(query);
+            }
 			return speciesDAO.loadSpecies();
 		}
     	

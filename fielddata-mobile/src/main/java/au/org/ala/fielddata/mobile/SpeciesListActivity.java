@@ -51,21 +51,30 @@ public class SpeciesListActivity extends SpeciesListFragment implements SpeciesS
 	class OnQueryTextListener extends OnQueryTextListenerCompat {
 
 		@Override
-		public boolean onQueryTextChange(String newText) {
-			return true;
+		public boolean onQueryTextChange(String query) {
+            speciesSearch(query);
+            return true;
 		}
 
 		@Override
 		public boolean onQueryTextSubmit(String query) {
+            speciesSearch(query);
 			return false;
 		}
-		
 	}
+
+    class OnQueryCloseListener extends SearchViewCompat.OnCloseListenerCompat {
+        @Override
+        public boolean onClose() {
+            clearSearch();
+            return true;
+        }
+    }
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//setHasOptionsMenu(true);
+		setHasOptionsMenu(true);
 		init();
 	}
 	
@@ -97,6 +106,7 @@ public class SpeciesListActivity extends SpeciesListFragment implements SpeciesS
         
         View searchView = SearchViewCompat.newSearchView(getActivity());
         SearchViewCompat.setOnQueryTextListener(searchView, new OnQueryTextListener());
+        SearchViewCompat.setOnCloseListener(searchView, new OnQueryCloseListener());
         item.setActionView(searchView);
     }
 
