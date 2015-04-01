@@ -47,8 +47,9 @@ public class SavedRecordHolder {
 	
 	private StorageManager storageManager;
 	
-	public SavedRecordHolder(View row) {
+	public SavedRecordHolder(View row, boolean noSpecies) {
 		recordSpecies = (TextView)row.findViewById(R.id.record_description_species);
+        if (noSpecies) recordSpecies.setVisibility(View.GONE);
 		recordTime = (TextView)row.findViewById(R.id.record_description_time);
 		icon = (ImageView)row.findViewById(R.id.record_image);
 		checkbox = (CheckBox)row.findViewById(R.id.checkbox);

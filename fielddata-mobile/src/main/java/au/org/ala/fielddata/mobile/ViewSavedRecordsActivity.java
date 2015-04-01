@@ -109,10 +109,6 @@ public class ViewSavedRecordsActivity extends SherlockListFragment implements Ac
 	@Override
 	public void onCreateOptionsMenu(Menu menu, com.actionbarsherlock.view.MenuInflater inflater) {
 		inflater.inflate(R.menu.saved_records_layout, menu);
-        if (getResources().getBoolean(R.bool.no_species)) {
-            final View v = getActivity().findViewById(R.id.record_description_species);
-            if (v != null) v.setVisibility(View.GONE);
-        }
 	}
 
 	public void reload() {
@@ -210,11 +206,14 @@ public class ViewSavedRecordsActivity extends SherlockListFragment implements Ac
 		private ViewSavedRecordsActivity fragment;
 		private Preferences prefs;
 		private int userId;
+        private final boolean noSpecies;
 		
 		public RecordAdapter(ViewSavedRecordsActivity fragment, List<RecordView> records, int userId) {
 			super(fragment.getActivity(), R.layout.saved_records_layout, R.id.record_description_species);
 			this.userId = userId;
+            this.noSpecies = fragment.getResources().getBoolean(R.bool.no_species);
 			prefs = new Preferences(fragment.getActivity());
+
 			setNotifyOnChange(false);
 			add(null);
 			
@@ -240,7 +239,7 @@ public class ViewSavedRecordsActivity extends SherlockListFragment implements Ac
 				View row = super.getView(position, convertView, parent);
 				SavedRecordHolder viewHolder = (SavedRecordHolder) row.getTag();
 				if (viewHolder == null) {
-					viewHolder = new SavedRecordHolder(row);
+					viewHolder = new SavedRecordHolder(row, noSpecies);
 					viewHolder.checkbox.setOnClickListener(fragment);
 					row.setTag(viewHolder);
 					

@@ -31,6 +31,11 @@ import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import org.springframework.util.StringUtils;
+
+import au.org.ala.fielddata.mobile.dao.GenericDAO;
+import au.org.ala.fielddata.mobile.model.User;
 import au.org.ala.fielddata.mobile.nrmplus.R;
 import au.org.ala.fielddata.mobile.model.Attribute;
 import au.org.ala.fielddata.mobile.model.Attribute.AttributeOption;
@@ -68,11 +73,25 @@ public class SurveyBuilder {
 			addRow(tableLayout, row);
 		}
 		View previousView = null;
+        boolean skipLocationPicker = false;
+        for (int i = 0; i < rowCount; i++) {
+            Attribute attribute = pageAttributes.get(i);
+            if ("mobileLocation".equalsIgnoreCase(attribute.name)) {
+                skipLocationPicker = attribute.required = true;
+            } else if ("recordedBy".equalsIgnoreCase(attribute.name) && !StringUtils.hasLength(model.getValue(attribute))) {
+                GenericDAO<User> userDAO = new GenericDAO<User>(viewContext);
+                List<User> users = userDAO.loadAll(User.class);
+                if (users.size() > 0) {
+                    User user = users.get(0);
+                    model.setValue(attribute, user.firstName + " " + user.lastName);
+                }
+            }
+        }
 		for (int i = 0; i < rowCount; i++) {
 			TableRow row = new TableRow(viewContext);
 
 			Attribute attribute = pageAttributes.get(i);
-
+            if (attribute.getType() == Attribute.AttributeType.POINT && skipLocationPicker) continue;
 			View inputView = buildFields(attribute, row);
 			
 			configureKeyboardBindings(previousView, inputView);
