@@ -77,7 +77,8 @@ public class SurveyBuilder {
         for (int i = 0; i < rowCount; i++) {
             Attribute attribute = pageAttributes.get(i);
             if ("mobileLocation".equalsIgnoreCase(attribute.name)) {
-                skipLocationPicker = attribute.required = true;
+// functionality backed out by changing requirements
+//                skipLocationPicker = attribute.required = true;
             } else if ("recordedBy".equalsIgnoreCase(attribute.name) && !StringUtils.hasLength(model.getValue(attribute))) {
                 GenericDAO<User> userDAO = new GenericDAO<User>(viewContext);
                 List<User> users = userDAO.loadAll(User.class);
