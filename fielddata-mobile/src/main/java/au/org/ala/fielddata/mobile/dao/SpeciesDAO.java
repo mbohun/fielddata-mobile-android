@@ -228,13 +228,36 @@ public class SpeciesDAO extends GenericDAO<Species> {
 	
 	public Cursor loadSpecies() {
 
-        String query = "SELECT s._id, s."+SCIENTIFIC_NAME_COLUMN_NAME+", s."+COMMON_NAME_COLUMN_NAME+
-                ", s."+IMAGE_URL_COLUMN_NAME+", g.name"+
-                " from "+SPECIES_TABLE+" s left outer join "+SPECIES_GROUP_TABLE+
-                " g on s."+SPECIES_GROUP_COLUMN_NAME+"=g.server_id order by g.name, s."+COMMON_NAME_COLUMN_NAME;
+        boolean useGroup = false;
+        String query;
+        if (!useGroup) {
+            query = "SELECT s._id, s."+SCIENTIFIC_NAME_COLUMN_NAME+", s."+COMMON_NAME_COLUMN_NAME+
+            ", s."+IMAGE_URL_COLUMN_NAME+" , 'All Weeds' as name from "+SPECIES_TABLE+" s order by s."+COMMON_NAME_COLUMN_NAME;
+        }
+        else {
+            query = "SELECT s._id, s."+SCIENTIFIC_NAME_COLUMN_NAME+", s."+COMMON_NAME_COLUMN_NAME+
+                    ", s."+IMAGE_URL_COLUMN_NAME+", g.name"+
+                    " from "+SPECIES_TABLE+" s left outer join "+SPECIES_GROUP_TABLE+
+                    " g on s."+SPECIES_GROUP_COLUMN_NAME+"=g.server_id order by g.name, s."+COMMON_NAME_COLUMN_NAME;
+        }
 
 		return helper.getReadableDatabase().rawQuery(query, null);
 	}
+
+    public Cursor searchSpecies(String queryString) {
+
+        String query = "SELECT s._id, s."+SCIENTIFIC_NAME_COLUMN_NAME+", s."+COMMON_NAME_COLUMN_NAME+
+                ", s."+IMAGE_URL_COLUMN_NAME+", g.name"+
+                " from "+SPECIES_TABLE+" s left outer join "+SPECIES_GROUP_TABLE+
+                " g on s."+SPECIES_GROUP_COLUMN_NAME+"=g.server_id "+
+                " where s."+SCIENTIFIC_NAME_COLUMN_NAME+" like ? or s."+COMMON_NAME_COLUMN_NAME+" like ?"+
+                " order by g.name, s."+COMMON_NAME_COLUMN_NAME;
+
+        StringBuffer like = new StringBuffer();
+        like.append("%").append(queryString).append("%");
+        String param = like.toString();
+        return helper.getReadableDatabase().rawQuery(query, new String[]{param, param});
+    }
 
     public void saveSpeciesGroups(List<SpeciesGroup> groups, SQLiteDatabase db) {
         db.execSQL("delete from "+SPECIES_GROUP_TABLE);

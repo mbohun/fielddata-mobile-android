@@ -1,5 +1,10 @@
-
-.idea
-build
-libraries/android-mapviewballoons
-libraries/Android-ViewPagerIndicator
+.gradle
+/local.properties
+*.iml
+/.idea
+/build
+/libraries/android-mapviewballoons
+/libraries/android-mapviewballoons/android-mapviewballoons
+/libraries/Android-ViewPagerIndicator
+/fielddata-mobile/build
+/libraries
