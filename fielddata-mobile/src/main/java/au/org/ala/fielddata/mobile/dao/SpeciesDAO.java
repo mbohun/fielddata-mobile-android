@@ -228,18 +228,10 @@ public class SpeciesDAO extends GenericDAO<Species> {
 	
 	public Cursor loadSpecies() {
 
-        boolean useGroup = false;
-        String query;
-        if (!useGroup) {
-            query = "SELECT s._id, s."+SCIENTIFIC_NAME_COLUMN_NAME+", s."+COMMON_NAME_COLUMN_NAME+
-            ", s."+IMAGE_URL_COLUMN_NAME+" , 'All Weeds' as name from "+SPECIES_TABLE+" s order by s."+COMMON_NAME_COLUMN_NAME;
-        }
-        else {
-            query = "SELECT s._id, s."+SCIENTIFIC_NAME_COLUMN_NAME+", s."+COMMON_NAME_COLUMN_NAME+
+        String query = "SELECT s._id, s."+SCIENTIFIC_NAME_COLUMN_NAME+", s."+COMMON_NAME_COLUMN_NAME+
                     ", s."+IMAGE_URL_COLUMN_NAME+", g.name"+
                     " from "+SPECIES_TABLE+" s left outer join "+SPECIES_GROUP_TABLE+
                     " g on s."+SPECIES_GROUP_COLUMN_NAME+"=g.server_id order by g.name, s."+COMMON_NAME_COLUMN_NAME;
-        }
 
 		return helper.getReadableDatabase().rawQuery(query, null);
 	}

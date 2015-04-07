@@ -577,10 +577,13 @@ public class MobileFieldDataDashboard extends SherlockFragmentActivity implement
 		inflater.inflate(R.menu.common_menu_items, menu);
 		inflater.inflate(R.menu.dashboard_menu, menu);
 
-		newRecordMenuItem = menu.add(R.string.new_record_description);
+        if (viewPager.getCurrentItem() == 0) {
+            newRecordMenuItem = menu.add(R.string.new_record_description);
 
-		newRecordMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS
-				| MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+            newRecordMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS
+                    | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        }
+
 		return super.onCreateOptionsMenu(menu);
 	}
 
