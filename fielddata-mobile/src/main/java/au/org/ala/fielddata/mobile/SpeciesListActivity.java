@@ -14,39 +14,37 @@
  ******************************************************************************/
 package au.org.ala.fielddata.mobile;
 
-import java.util.List;
-
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
+import android.os.Handler;
 import android.support.v4.widget.SearchViewCompat;
 import android.support.v4.widget.SearchViewCompat.OnQueryTextListenerCompat;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Toast;
+
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+
+import java.util.List;
 
 import au.org.ala.fielddata.mobile.dao.SurveyDAO;
 import au.org.ala.fielddata.mobile.model.Species;
 import au.org.ala.fielddata.mobile.model.Survey;
 import au.org.ala.fielddata.mobile.nrmplus.R;
-import au.org.ala.fielddata.mobile.service.SurveyDownloadService;
 import au.org.ala.fielddata.mobile.ui.SpeciesListFragment;
 import au.org.ala.fielddata.mobile.ui.SpeciesSelectionListener;
-
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 
 /**
  * Presents a list of species to the user for information purposes.
  */
 public class SpeciesListActivity extends SpeciesListFragment implements SpeciesSelectionListener {
 
+    private Menu optionsMenu;
 
 	class OnQueryTextListener extends OnQueryTextListenerCompat {
 
@@ -66,8 +64,11 @@ public class SpeciesListActivity extends SpeciesListFragment implements SpeciesS
     class OnQueryCloseListener extends SearchViewCompat.OnCloseListenerCompat {
         @Override
         public boolean onClose() {
+            optionsMenu.findItem(R.id.menu_settings).setVisible(true);
+            optionsMenu.findItem(R.id.login_screen).setVisible(true);
+            optionsMenu.findItem(R.id.about).setVisible(true);
             clearSearch();
-            return true;
+            return false;
         }
     }
 	
@@ -96,18 +97,40 @@ public class SpeciesListActivity extends SpeciesListFragment implements SpeciesS
 		onSpeciesSelected(species);
 		
 	}
-	
-	/** This won't currently be called as we haven't called setHasOptionsMenu(true) */
-	@Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+
+	@Override
+    public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
+        optionsMenu = menu;
+
         // Place an action bar item for searching.
         MenuItem item = menu.add("Search");
         item.setIcon(android.R.drawable.ic_menu_search);
         item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        
+
         View searchView = SearchViewCompat.newSearchView(getActivity());
         SearchViewCompat.setOnQueryTextListener(searchView, new OnQueryTextListener());
         SearchViewCompat.setOnCloseListener(searchView, new OnQueryCloseListener());
-        item.setActionView(searchView);
+        LinearLayout wrapperView = new LinearLayout(getActivity()) {
+            @Override
+            protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+                if (oldw > 0 && w > oldw) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                        menu.findItem(R.id.menu_settings).setVisible(false);
+                        menu.findItem(R.id.login_screen).setVisible(false);
+                        menu.findItem(R.id.about).setVisible(false);
+                        }
+                    }, 10);
+                }
+                super.onSizeChanged(w, h, oldw, oldh);
+            }
+        };
+        searchView.setLayoutParams(new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
+        wrapperView.addView(searchView);
+        item.setActionView(wrapperView);
     }
 
 	public void onSpeciesSelected(final Species species) {

@@ -78,7 +78,7 @@ android {
         }
         actesdd {
             applicationId "au.org.ala.fielddata.mobile.actesdd"
-            versionCode 2
+            versionCode 4
             versionName "1.0"
             // Version 2 candidate for publication.
         }
