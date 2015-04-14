@@ -7,4 +7,5 @@
         <item>ACT and Southern Tablelands Weed Spotter Portal</item>
     </string-array>
     <bool name="use_hr_as_page_break">false</bool>
+    <bool name="no_species_groups_on_search">true</bool>
 </resources>
