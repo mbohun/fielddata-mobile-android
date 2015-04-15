@@ -5,7 +5,6 @@
 Android SDK; current SDK dependencies are:
 - Android-17
 - Google APIS 17
-- Android-14
 - Extras
 
 The `ANDROID_HOME` environment variable needs to be set.
