@@ -5,7 +5,7 @@ android:
     - build-tools-20
     - android-20
     - extra
-    - addon-google_apis-google-20
+    - addon-google_apis-google-17
 
 before_script:
   - libraries/setupLibraries.bash
