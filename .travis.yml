@@ -2,10 +2,10 @@ language: android
 
 android:
   components:
-    - build-tools-17
-    - android-17
+    - build-tools-20
+    - android-20
     - extra
-    - addon-google_apis-google-17
+    - addon-google_apis-google-20
 
 before_script:
   - libraries/setupLibraries.bash
