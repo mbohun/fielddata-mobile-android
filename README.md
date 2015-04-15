@@ -1,4 +1,4 @@
-### fielddata-mobile-android [![Build Status](https://travis-ci.org/AtlasOfLivingAustralia/fielddata-mobile-android.svg?branch=master)](https://travis-ci.org/AtlasOfLivingAustralia/fielddata-mobile-android)
+### fielddata-mobile-android [![Build Status](https://travis-ci.org/mbohun/fielddata-mobile-android.svg?branch=master)](https://travis-ci.org/mbohun/fielddata-mobile-android)
 
 #### Prequisites:
 
