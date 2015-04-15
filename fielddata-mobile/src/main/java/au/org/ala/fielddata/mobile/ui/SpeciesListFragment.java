@@ -134,12 +134,10 @@ public class SpeciesListFragment extends SherlockListFragment implements LoaderC
     public static class SpeciesAdapter extends ResourceCursorAdapter {
 
     	private Context ctx;
-        private final boolean noGroupsOnSearch;
 
 		public SpeciesAdapter(Context context, int layout, Cursor c) {
 			super(context, layout, c, 0);	
 			ctx = context;
-            noGroupsOnSearch = ctx.getResources().getBoolean(R.bool.no_species_groups_on_search);
 		}
 
 		@Override
@@ -151,15 +149,11 @@ public class SpeciesListFragment extends SherlockListFragment implements LoaderC
 			}
 
             String previousGroup = null;
-            if (noGroupsOnSearch) {
+            int position = cursor.getPosition();
+            if (position > 0) {
+                cursor.moveToPrevious();
                 previousGroup = cursor.getString(cursor.getColumnIndex(SpeciesDAO.SPECIES_GROUP_NAME_COLUMN_NAME));
-            } else {
-                int position = cursor.getPosition();
-                if (position > 0) {
-                    cursor.moveToPrevious();
-                    previousGroup = cursor.getString(cursor.getColumnIndex(SpeciesDAO.SPECIES_GROUP_NAME_COLUMN_NAME));
-                    cursor.moveToPosition(position);
-                }
+                cursor.moveToPosition(position);
             }
 
 			viewHolder.populate(
