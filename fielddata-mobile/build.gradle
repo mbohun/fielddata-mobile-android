@@ -115,7 +115,7 @@ android {
         release {
             debuggable false
             jniDebuggable false
-            //signingConfig signingConfigs.ala
+            signingConfig signingConfigs.ala
         }
     }
 
