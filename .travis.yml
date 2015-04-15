@@ -6,3 +6,6 @@ android:
     - android-17
     - extra
     - addon-google_apis-google-17
+
+before_script:
+  - libraries/setupLibraries.bash
