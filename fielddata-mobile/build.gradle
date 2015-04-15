@@ -40,11 +40,13 @@ android {
 
     signingConfigs {
         ala {
-            //storeFile file(alaKeyStore)
-            //storePassword alaStorePass
-            //keyAlias alaKeyAlias
-            //keyPassword alaKeyPass
-
+            println System.env['TRAVIS']
+            if (System.env['TRAVIS'] != 'true') {
+                storeFile file(alaKeyStore)
+                storePassword alaStorePass
+                keyAlias alaKeyAlias
+                keyPassword alaKeyPass
+            }
 
         }
     }
